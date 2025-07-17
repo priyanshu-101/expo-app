@@ -2,6 +2,7 @@ import { Entypo, FontAwesome, MaterialIcons } from "@expo/vector-icons";
 import React from "react";
 import { Linking } from "react-native";
 import styled from "styled-components/native";
+import Navbar from "./Navbar";
 
 const address = "4612/52 GROUND FLOOR, REGHAR PURA, KAROL BAGH-11005";
 const phone = "01128724925";
@@ -24,6 +25,7 @@ const Contact = () => {
 
   return (
     <Container>
+        <Navbar />
       <Card>
         <Title>DD Bullion Pvt. Ltd</Title>
         
