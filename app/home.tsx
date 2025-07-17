@@ -1,5 +1,9 @@
-import Home from '@/components/mobile/home'
+import Hero from '@/components/mobile/Hero';
 
 export default function HomeScreen() {
-  return <Home />;
+  return (
+    <>
+      <Hero />
+    </>
+  );
 } 
