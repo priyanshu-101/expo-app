@@ -93,7 +93,9 @@ export default Contact;
 const Container = styled.ScrollView`
   flex: 1;
   background-color: #121212;
+  padding-top: 30px;
 `;
+
 
 const Card = styled.View`
   background-color: #1e1e1e;

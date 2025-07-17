@@ -213,7 +213,7 @@ const KYC = () => {
 
 const styles = StyleSheet.create({
   container: {
-    padding: 16,
+    paddingTop: 30,
     backgroundColor: '#181818',
     flexGrow: 1,
   },

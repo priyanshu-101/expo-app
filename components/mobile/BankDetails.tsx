@@ -52,10 +52,8 @@ const BankDetails = () => (
 const styles = StyleSheet.create({
   section: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
     backgroundColor: '#111',
-    padding: 20,
+    paddingTop: 30,
   },
   card: {
     backgroundColor: '#1e1e1e',
