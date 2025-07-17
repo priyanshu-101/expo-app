@@ -279,16 +279,17 @@ const styles = StyleSheet.create({
   },
   specialCardsRow: {
     flexDirection: 'row',
-    gap: 16,
-    marginBottom: 18,
     flexWrap: 'wrap',
     justifyContent: 'center',
+    marginBottom: 18,
+    marginTop: 20, // Added margin from top
   },
   specialCard: {
     backgroundColor: '#1e1e1e',
     borderRadius: 16,
     padding: 18,
     minWidth: 110,
+    width: '30%', // Added to allow wrapping
     alignItems: 'center',
     marginHorizontal: 6,
     marginBottom: 8,
