@@ -1,6 +1,7 @@
 import { FontAwesome, FontAwesome5 } from '@expo/vector-icons';
 import React from 'react';
 import { Linking, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import Navbar from './Navbar';
 
 const BANK_DETAILS = {
   accountNumber: '020561900002621',
@@ -12,6 +13,7 @@ const BANK_DETAILS = {
 
 const BankDetails = () => (
   <View style={styles.section}>
+    <Navbar />
     <View style={styles.card}>
       <Text style={styles.title}>Bank Details</Text>
       <View style={styles.list}>
