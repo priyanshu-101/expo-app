@@ -3,6 +3,7 @@ import React from "react";
 import { Linking } from "react-native";
 import styled from "styled-components/native";
 import Navbar from "./Navbar";
+import Footer from "./Footer";
 
 const address = "4612/52 GROUND FLOOR, REGHAR PURA, KAROL BAGH-11005";
 const phone = "01128724925";
@@ -81,6 +82,7 @@ const Contact = () => {
           </InfoItem>
         </InfoGrid>
       </Card>
+      <Footer />
     </Container>
   );
 };
