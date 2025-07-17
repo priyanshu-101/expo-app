@@ -116,7 +116,7 @@ const Navbar: React.FC = () => {
       {/* Navbar Links Row */}
       <NavbarLinksRow>
         <NavLinks>
-          <NavLink key="/" onPress={() => handleNav('/')}>
+          <NavLink key="/home" onPress={() => handleNav('/')}>
             <NavLinkText>Home</NavLinkText>
           </NavLink>
           {NAV_LINKS.map(link => (
