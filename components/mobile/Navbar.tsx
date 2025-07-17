@@ -8,10 +8,11 @@ import styled from "styled-components/native";
 const logo = require('../../assets/images/logo.png');
 
 const NAV_LINKS = [
-  { label: "Bank Details", route: "/bank-details" },
-  { label: "Contact", route: "/contact" },
   { label: "Services", route: "/service" },
   { label: "KYC", route: "/kyc" }, // Added KYC link
+  { label: "Bank Details", route: "/bank-details" },
+  { label: "Contact", route: "/contact" },
+
 ];
 
 const FLAG_URLS = {
@@ -159,7 +160,6 @@ export default Navbar;
 
 const NavbarOuter = styled.View`
   width: 100%;
-  background-color: #222;
 `;
 
 const LogoSection = styled.View`
@@ -170,8 +170,8 @@ const LogoSection = styled.View`
 `;
 
 const Logo = styled.Image`
-  height: 70px;
-  width: 150px;
+  height: 100px;
+  width: 2000px;
 `;
 
 const NavbarLinksRow = styled.View`
@@ -187,8 +187,8 @@ const NavLinks = styled.View`
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  gap: 18px;
-  padding-vertical: 6px;
+  gap: 10px;
+  padding-vertical: 4px;
 `;
 
 const NavLink = styled.TouchableOpacity``;
@@ -196,8 +196,8 @@ const NavLink = styled.TouchableOpacity``;
 const NavLinkText = styled.Text<{ active?: boolean }>`
   color: #fff;
   font-weight: bold;
-  font-size: 16px;
-  padding-horizontal: 8px;
+  font-size: 13px;
+  padding-horizontal: 4px;
   ${(props: { active?: boolean }) => props.active && 'text-decoration: underline;'}
 `;
 
@@ -208,6 +208,7 @@ const NavbarBottomRow = styled.View`
   min-height: 48px;
   overflow: hidden;
   padding: 5px 20px;
+  margin-top: 15px;
 `;
 
 const MarqueeContainer = styled.View`
@@ -229,6 +230,7 @@ const ClockItem = styled.View`
   border-radius: 8px;
   padding: 2px 16px;
   margin-right: 12px;
+  margin-top:5px;
 `;
 
 const ClockText = styled.Text`
