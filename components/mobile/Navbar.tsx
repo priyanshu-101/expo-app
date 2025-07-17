@@ -240,9 +240,10 @@ const ClockText = styled.Text`
 `;
 
 const Flag = styled.Image`
-  width: 22px;
-  height: 16px;
+  width: 32px;
+  height: 24px;
   border-radius: 2px;
+  background: #fff;
 `;
 
 const RatesMessage = styled.Text`

@@ -12,9 +12,9 @@ const MainStack = () => (
       headerShown: false,
     }}
   >
-    <Stack.Screen name="Contact" component={Contact} />
-    <Stack.Screen name="BankDetails" component={BankDetails} />
-    <Stack.Screen name="Service" component={Service} />
+    <Stack.Screen name="Contact" component={Contact} options={{ headerShown: false }} />
+    <Stack.Screen name="BankDetails" component={BankDetails} options={{ headerShown: false }} />
+    <Stack.Screen name="Service" component={Service} options={{ headerShown: false }} />
   </Stack.Navigator>
 );
 

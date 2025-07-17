@@ -269,6 +269,7 @@ const styles = StyleSheet.create({
     minHeight: '100%',
     paddingTop: 20,
     paddingBottom: 20,
+    marginTop:10
   },
   heroLoading: {
     minHeight: 300,
