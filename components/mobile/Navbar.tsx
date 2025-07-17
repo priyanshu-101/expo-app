@@ -12,13 +12,20 @@ const NAV_LINKS = [
   { label: "KYC", route: "/kyc" }, // Added KYC link
   { label: "Bank Details", route: "/bank-details" },
   { label: "Contact", route: "/contact" },
-
 ];
 
+// Updated flag URLs with better sources and fallbacks
 const FLAG_URLS = {
-  india: "https://flagcdn.com/in.png",
-  us: "https://flagcdn.com/us.png",
-  uk: "https://flagcdn.com/gb.png",
+  india: "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/IN.svg",
+  us: "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/US.svg",
+  uk: "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/GB.svg",
+};
+
+// Alternative flag URLs as backup
+const FLAG_URLS_BACKUP = {
+  india: "https://flagsapi.com/IN/flat/32.png",
+  us: "https://flagsapi.com/US/flat/32.png",
+  uk: "https://flagsapi.com/GB/flat/32.png",
 };
 
 const MOBILE_BREAKPOINT = 768;
@@ -37,9 +44,13 @@ const Navbar: React.FC = () => {
     us: "",
     uk: "",
   });
-  // Remove hamburger/mobile menu state
-  // const [isMenuOpen, setIsMenuOpen] = useState(false);
-  // const [isMobile, setIsMobile] = useState(Dimensions.get("window").width < MOBILE_BREAKPOINT);
+  
+  // State to track flag loading errors
+  const [flagErrors, setFlagErrors] = useState({
+    india: false,
+    us: false,
+    uk: false,
+  });
 
   // For marquee animation
   const scrollX = useRef(new Animated.Value(0)).current;
@@ -85,23 +96,22 @@ const Navbar: React.FC = () => {
     return () => { isMounted = false; };
   }, [screenWidth, scrollX]);
 
-  // Remove responsive check
-  // useEffect(() => {
-  //   const onChange = ({ window }: { window: { width: number } }) => {
-  //     setIsMobile(window.width < MOBILE_BREAKPOINT);
-  //     if (window.width >= MOBILE_BREAKPOINT) setIsMenuOpen(false);
-  //   };
-  //   const subscription = Dimensions.addEventListener("change", onChange);
-  //   return () => {
-  //     if (typeof subscription?.remove === "function") {
-  //       subscription.remove();
-  //     }
-  //   };
-  // }, []);
-
   // Navigation handler for Expo Router
   const handleNav = (route: string) => {
     router.push(route as any);
+  };
+
+  // Handle flag image loading errors
+  const handleFlagError = (country: keyof typeof flagErrors) => {
+    setFlagErrors(prev => ({ ...prev, [country]: true }));
+  };
+
+  // Get flag source with fallback
+  const getFlagSource = (country: keyof typeof FLAG_URLS) => {
+    if (flagErrors[country]) {
+      return { uri: FLAG_URLS_BACKUP[country] };
+    }
+    return { uri: FLAG_URLS[country] };
   };
 
   // For demo, set 'Home' as active
@@ -132,15 +142,24 @@ const Navbar: React.FC = () => {
           <Animated.View style={{ flexDirection: "row", transform: [{ translateX: scrollX }] }}>
             <ClocksAnimated>
               <ClockItem>
-                <Flag source={{ uri: FLAG_URLS.india }} />
+                <Flag 
+                  source={getFlagSource('india')} 
+                  onError={() => handleFlagError('india')}
+                />
                 <ClockText>{currentTime.india}</ClockText>
               </ClockItem>
               <ClockItem>
-                <Flag source={{ uri: FLAG_URLS.us }} />
+                <Flag 
+                  source={getFlagSource('us')} 
+                  onError={() => handleFlagError('us')}
+                />
                 <ClockText>{currentTime.us}</ClockText>
               </ClockItem>
               <ClockItem>
-                <Flag source={{ uri: FLAG_URLS.uk }} />
+                <Flag 
+                  source={getFlagSource('uk')} 
+                  onError={() => handleFlagError('uk')}
+                />
                 <ClockText>{currentTime.uk}</ClockText>
               </ClockItem>
               <RatesMessage>
@@ -230,7 +249,7 @@ const ClockItem = styled.View`
   border-radius: 8px;
   padding: 2px 16px;
   margin-right: 12px;
-  margin-top:5px;
+  margin-top: 5px;
 `;
 
 const ClockText = styled.Text`
@@ -243,7 +262,7 @@ const Flag = styled.Image`
   width: 32px;
   height: 24px;
   border-radius: 2px;
-  background: #fff;
+  background-color: #3a3a3a;
 `;
 
 const RatesMessage = styled.Text`
