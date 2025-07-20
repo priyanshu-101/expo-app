@@ -207,6 +207,7 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     textAlign: 'left',
     marginBottom: 12,
+    fontFamily: 'Montserrat',
   },
   sectionTitle: {
     color: '#bfa14a',
@@ -214,6 +215,7 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     marginBottom: 18,
     textAlign: 'left',
+    fontFamily: 'Montserrat',
   },
   infoRow: {
     flexDirection: 'row',
@@ -228,13 +230,14 @@ const styles = StyleSheet.create({
     fontSize: 18,
     flex: 1,
     textAlign: 'left',
+    fontFamily: 'Montserrat',
   },
   link: {
     color: '#e0e0e0',
     fontSize: 20,
     marginBottom: 14,
-    textDecorationLine: 'underline',
     textAlign: 'left',
+    fontFamily: 'Montserrat',
   },
   feedbackSection: {
     alignItems: 'flex-start',
@@ -255,6 +258,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     marginBottom: 12,
     textAlign: 'left',
+    fontFamily: 'Montserrat',
   },
   feedbackButton: {
     backgroundColor: '#bfa14a',
@@ -267,6 +271,7 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontWeight: '700',
     fontSize: 20,
+    fontFamily: 'Montserrat',
   },
   feedbackStatus: {
     marginTop: 8,
@@ -289,6 +294,7 @@ const styles = StyleSheet.create({
     color: '#e0e0e0',
     fontSize: 18,
     textAlign: 'left',
+    fontFamily: 'Montserrat',
   },
   footerBottomContact: {
     flexDirection: 'row',
@@ -337,6 +343,7 @@ const styles = StyleSheet.create({
     fontSize: 15,
     marginLeft: 6,
     textAlign: 'left',
+    fontFamily: 'Montserrat',
   },
   footerBottomContactHorizontalRight: {
     flexDirection: 'row',
