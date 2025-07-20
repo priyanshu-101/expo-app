@@ -5,15 +5,15 @@ import Navbar from './Navbar';
 import Footer from './Footer';
 
 const services = [
-  {
-    icon: <FontAwesome5 name="exchange-alt" size={40} color="#bfa14a" />,
-    title: 'Gold Exchange (99.50%)',
-    description: (
-      <Text>
-        We do the job work of <Text style={{fontWeight: 'bold'}}>OLD GOLD</Text> to Refined <Text style={{fontWeight: 'bold'}}>PURE GOLD</Text> in <Text style={{fontWeight: 'bold'}}>AQUA REGIA</Text> process in highly International standard
-      </Text>
-    ),
-  },
+  // {
+  //   icon: <FontAwesome5 name="exchange-alt" size={40} color="#bfa14a" />,
+  //   title: 'Gold Exchange (99.50%)',
+  //   description: (
+  //     <Text>
+  //       We do the job work of <Text style={{fontWeight: 'bold'}}>OLD GOLD</Text> to Refined <Text style={{fontWeight: 'bold'}}>PURE GOLD</Text> in <Text style={{fontWeight: 'bold'}}>AQUA REGIA</Text> process in highly International standard
+  //     </Text>
+  //   ),
+  // },
   {
     icon: <FontAwesome5 name="fire" size={40} color="#bfa14a" />,
     title: 'Gold/Silver Melting',
