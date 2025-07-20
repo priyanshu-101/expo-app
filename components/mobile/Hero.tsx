@@ -4,7 +4,7 @@ import Footer from './Footer';
 import Navbar from './Navbar';
 
 const HIGHLIGHT_DURATION = 700; // ms
-const API_BASE = 'http://localhost:5000/api';
+const API_BASE = 'https://ddbullions.in/api/';
 
 interface Product {
   product_name: string;
@@ -96,6 +96,7 @@ const Home = () => {
     const fetchMantrRates = async () => {
       try {
         const res = await fetch(`${API_BASE}/mantrjewels-rates`);
+        console.log("Mantr", res)
         const data = await res.json();
         if (data.success && data.data) {
           setMantrRates(data.data);

@@ -107,7 +107,7 @@ const KYC = () => {
       }
     });
     try {
-      const res = await fetch('http://localhost:5000/api/kyc', {
+      const res = await fetch('https://ddbullions.in/api/kyc', {
         method: 'POST',
         body: data,
         headers: {
