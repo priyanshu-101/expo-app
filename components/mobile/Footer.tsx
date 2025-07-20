@@ -1,6 +1,6 @@
 import { Entypo, FontAwesome, MaterialIcons } from '@expo/vector-icons';
 import React, { useState } from 'react';
-import { Alert, Image, Linking, StyleSheet, Text, TextInput, TouchableOpacity, useWindowDimensions, View } from 'react-native';
+import { Image, Linking, StyleSheet, Text, TextInput, TouchableOpacity, useWindowDimensions, View } from 'react-native';
 
 const logo = require('../../assets/images/logo.png');
 
@@ -31,7 +31,7 @@ const Footer = () => {
   return (
     <View style={styles.footerWrapper}>
       {/* Floating Contact Icons */}
-      <View style={styles.floatingContact} pointerEvents="box-none">
+      {/* <View style={styles.floatingContact} pointerEvents="box-none">
         <TouchableOpacity
           style={[styles.contactIcon, styles.callIcon]}
           onPress={() => Linking.openURL('tel:+919899781543')}
@@ -44,7 +44,7 @@ const Footer = () => {
         >
           <FontAwesome name="whatsapp" size={24} color="#fff" />
         </TouchableOpacity>
-      </View>
+      </View> */}
 
       <View style={styles.footer}>
         <View style={[styles.footerContent, {flexDirection: columns === 1 ? 'column' : 'row', flexWrap: 'wrap'}]}>
@@ -121,16 +121,20 @@ const Footer = () => {
         </View>
         <View style={styles.footerBottom}>
           <Text style={styles.footerBottomText}>&copy; {new Date().getFullYear()} DD Bullion Pvt. Ltd. All Rights Reserved.</Text>
-          <View style={styles.footerAppLinks}>
-            <TouchableOpacity style={[styles.appLink, styles.ios]} onPress={() => Alert.alert('Coming Soon', 'iOS app coming soon!')}>
-              <FontAwesome name="apple" size={18} color="#232323" />
-              <Text style={styles.appLinkText}>iOS App</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={[styles.appLink, styles.android]} onPress={() => Alert.alert('Coming Soon', 'Android app coming soon!')}>
-              <FontAwesome name="android" size={18} color="#34a853" />
-              <Text style={styles.appLinkText}>Android App</Text>
-            </TouchableOpacity>
-          </View>
+        </View>
+        <View style={styles.footerBottomContactHorizontalRight}>
+          <TouchableOpacity
+            style={[styles.contactIcon, styles.callIcon, styles.footerContactIcon]}
+            onPress={() => Linking.openURL('tel:+919899781543')}
+          >
+            <FontAwesome name="phone" size={22} color="#fff" />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.contactIcon, styles.whatsappIcon, styles.footerContactIcon]}
+            onPress={() => Linking.openURL('https://wa.me/919899781543')}
+          >
+            <FontAwesome name="whatsapp" size={22} color="#fff" />
+          </TouchableOpacity>
         </View>
       </View>
     </View>
@@ -286,6 +290,24 @@ const styles = StyleSheet.create({
     fontSize: 18,
     textAlign: 'left',
   },
+  footerBottomContact: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+  },
+  footerContactIcon: {
+    marginLeft: 0,
+    marginRight: 0,
+    marginBottom: 0,
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 2,
+  },
   footerAppLinks: {
     flexDirection: 'row',
     gap: 12,
@@ -315,6 +337,13 @@ const styles = StyleSheet.create({
     fontSize: 15,
     marginLeft: 6,
     textAlign: 'left',
+  },
+  footerBottomContactHorizontalRight: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    marginRight: 12,
+    gap: 10,
   },
 });
 
