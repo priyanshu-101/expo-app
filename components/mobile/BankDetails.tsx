@@ -1,6 +1,7 @@
 import { FontAwesome, FontAwesome5 } from '@expo/vector-icons';
 import React from 'react';
-import { Linking, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Linking, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import Footer from './Footer';
 import Navbar from './Navbar';
 
 const BANK_DETAILS = {
@@ -12,7 +13,10 @@ const BANK_DETAILS = {
 };
 
 const BankDetails = () => (
-  <View style={styles.section}>
+  <ScrollView
+    style={{ backgroundColor: '#111' }}
+    contentContainerStyle={{ paddingTop: 30 }}
+  >
     <Navbar />
     <View style={styles.card}>
       <Text style={styles.title}>Bank Details</Text>
@@ -46,14 +50,15 @@ const BankDetails = () => (
         </View>
       </View>
     </View>
-  </View>
+    <Footer />
+  </ScrollView>
 );
 
 const styles = StyleSheet.create({
   section: {
-    flex: 1,
-    backgroundColor: '#111',
-    paddingTop: 30,
+    // flex: 1, // Remove this line
+    // backgroundColor: '#111', // Move to ScrollView style
+    // paddingTop: 30, // Move to contentContainerStyle
   },
   card: {
     backgroundColor: '#1e1e1e',
