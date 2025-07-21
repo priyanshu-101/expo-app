@@ -16,8 +16,17 @@ const Footer = () => {
   const handleSubmit = async () => {
     setStatus('');
     try {
-      setStatus('Thank you for your feedback!');
-      setForm({ name: '', email: '', message: '' });
+      const res = await fetch('https://ddbullions.in/api/feedback', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form),
+      });
+      if (res.ok) {
+        setStatus('Thank you for your feedback!');
+        setForm({ name: '', email: '', message: '' });
+      } else {
+        setStatus('Failed to send feedback. Please try again.');
+      }
     } catch {
       setStatus('Failed to send feedback. Please try again.');
     }
@@ -31,20 +40,6 @@ const Footer = () => {
   return (
     <View style={styles.footerWrapper}>
       {/* Floating Contact Icons */}
-      {/* <View style={styles.floatingContact} pointerEvents="box-none">
-        <TouchableOpacity
-          style={[styles.contactIcon, styles.callIcon]}
-          onPress={() => Linking.openURL('tel:+919899781543')}
-        >
-          <FontAwesome name="phone" size={24} color="#fff" />
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.contactIcon, styles.whatsappIcon]}
-          onPress={() => Linking.openURL('https://wa.me/919899781543')}
-        >
-          <FontAwesome name="whatsapp" size={24} color="#fff" />
-        </TouchableOpacity>
-      </View> */}
 
       <View style={styles.footer}>
         <View style={[styles.footerContent, {flexDirection: columns === 1 ? 'column' : 'row', flexWrap: 'wrap'}]}>
