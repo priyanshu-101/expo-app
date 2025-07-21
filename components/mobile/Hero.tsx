@@ -210,18 +210,22 @@ const Home = () => {
   const renderProductRow = (product: Product, isGold: boolean) => (
     <View key={product.product_name} style={styles.rateRow}>
       <Text style={styles.productName}>{product.product_name}</Text>
-      <Text style={[styles.priceCell, priceHighlights[product.product_name+'_buy'] === 'green' && styles.priceUp, priceHighlights[product.product_name+'_buy'] === 'red' && styles.priceDown]}>
-        {displayPrices[product.product_name]?.buy}
+      <View style={{flex: 1, alignItems: 'center'}}>
+        <Text style={[styles.priceCell, priceHighlights[product.product_name+'_buy'] === 'green' && styles.priceUp, priceHighlights[product.product_name+'_buy'] === 'red' && styles.priceDown]}>
+          {displayPrices[product.product_name]?.buy}
+        </Text>
         {typeof productMargins[product.product_name]?.buy_margin === 'number' && productMargins[product.product_name]?.buy_margin !== 0 && (
           <Text style={styles.marginGold}>{productMargins[product.product_name].buy_margin > 0 ? `+${productMargins[product.product_name].buy_margin}` : `-${Math.abs(productMargins[product.product_name].buy_margin)}`}</Text>
         )}
-      </Text>
-      <Text style={[styles.priceCell, priceHighlights[product.product_name+'_sell'] === 'green' && styles.priceUp, priceHighlights[product.product_name+'_sell'] === 'red' && styles.priceDown]}>
-        {displayPrices[product.product_name]?.sell}
+      </View>
+      <View style={{flex: 1, alignItems: 'center'}}>
+        <Text style={[styles.priceCell, priceHighlights[product.product_name+'_sell'] === 'green' && styles.priceUp, priceHighlights[product.product_name+'_sell'] === 'red' && styles.priceDown]}>
+          {displayPrices[product.product_name]?.sell}
+        </Text>
         {typeof productMargins[product.product_name]?.sell_margin === 'number' && productMargins[product.product_name]?.sell_margin !== 0 && (
           <Text style={styles.marginGold}>{productMargins[product.product_name].sell_margin > 0 ? `+${productMargins[product.product_name].sell_margin}` : `-${Math.abs(productMargins[product.product_name].sell_margin)}`}</Text>
         )}
-      </Text>
+      </View>
     </View>
   );
 
@@ -283,14 +287,14 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     justifyContent: 'center',
     marginBottom: 18,
-    marginTop: 20, // Added margin from top
+    marginTop: 20,
   },
   specialCard: {
     backgroundColor: '#1e1e1e',
     borderRadius: 16,
     padding: 18,
     minWidth: 110,
-    width: '30%', // Added to allow wrapping
+    width: '30%',
     alignItems: 'center',
     marginHorizontal: 6,
     marginBottom: 8,
@@ -310,8 +314,11 @@ const styles = StyleSheet.create({
   specialCardLabel: {
     fontWeight: '700',
     color: '#bfa14a',
-    fontSize: 15,
+    fontSize: 11,
     marginBottom: 4,
+    textAlign: 'center',
+    width: '100%',
+    maxWidth: 65,
   },
   specialCardValue: {
     fontSize: 22,
@@ -331,44 +338,52 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     backgroundColor: '#2a2a2a',
     borderRadius: 8,
-    marginBottom: 6,
-    paddingVertical: 8,
-    paddingHorizontal: 4,
+    marginBottom: 12,
+    marginTop: 8,
+    paddingVertical: 14,
+    paddingHorizontal: 12,
     justifyContent: 'space-between',
   },
   headerCell: {
     color: '#bfa14a',
     fontWeight: '700',
-    fontSize: 16,
+    fontSize: 17,
     flex: 1,
     textAlign: 'center',
+    paddingHorizontal: 8,
+    paddingVertical: 2,
   },
   rateRow: {
     flexDirection: 'row',
     backgroundColor: '#1e1e1e',
     borderBottomWidth: 1,
     borderBottomColor: '#333',
-    paddingVertical: 10,
-    paddingHorizontal: 4,
+    paddingVertical: 14,
+    paddingHorizontal: 12,
     alignItems: 'center',
     justifyContent: 'space-between',
+    marginBottom: 8,
+    borderRadius: 6,
   },
   productName: {
     flex: 1,
     color: '#e0e0e0',
     fontWeight: '600',
-    fontSize: 15,
+    fontSize: 16,
     textAlign: 'center',
+    paddingHorizontal: 8,
+    paddingVertical: 2,
   },
   priceCell: {
     flex: 1,
     color: '#e0e0e0',
     fontWeight: '600',
-    fontSize: 15,
+    fontSize: 16,
     textAlign: 'center',
     borderRadius: 6,
-    paddingVertical: 4,
-    paddingHorizontal: 2,
+    paddingVertical: 8,
+    paddingHorizontal: 8,
+    marginHorizontal: 2,
   },
   priceUp: {
     color: '#1db954',
@@ -386,8 +401,11 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     borderRadius: 6,
     paddingHorizontal: 8,
-    marginLeft: 8,
+    marginLeft: 0,
     fontSize: 13,
+    textAlign: 'center',
+    alignSelf: 'center',
+    marginTop: 2,
   },
 });
 
