@@ -39,8 +39,6 @@ const Footer = () => {
 
   return (
     <View style={styles.footerWrapper}>
-      {/* Floating Contact Icons */}
-
       <View style={styles.footer}>
         <View style={[styles.footerContent, {flexDirection: columns === 1 ? 'column' : 'row', flexWrap: 'wrap'}]}>
           {/* Company Info */}
@@ -117,7 +115,7 @@ const Footer = () => {
         <View style={styles.footerBottom}>
           <Text style={styles.footerBottomText}>&copy; {new Date().getFullYear()} DD Bullion Pvt. Ltd. All Rights Reserved.</Text>
         </View>
-        <View style={styles.footerBottomContactHorizontalRight}>
+        {/* <View style={styles.footerBottomContactHorizontalRight}>
           <TouchableOpacity
             style={[styles.contactIcon, styles.callIcon, styles.footerContactIcon]}
             onPress={() => Linking.openURL('tel:+919899781543')}
@@ -130,7 +128,7 @@ const Footer = () => {
           >
             <FontAwesome name="whatsapp" size={22} color="#fff" />
           </TouchableOpacity>
-        </View>
+        </View> */}
       </View>
     </View>
   );
@@ -142,14 +140,6 @@ const styles = StyleSheet.create({
     paddingTop: 32,
     paddingBottom: 16,
     position: 'relative',
-  },
-  floatingContact: {
-    position: 'absolute',
-    right: 18,
-    bottom: 18,
-    flexDirection: 'column',
-    gap: 12,
-    zIndex: 1000,
   },
   contactIcon: {
     width: 40,
@@ -163,7 +153,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   callIcon: {
-    backgroundColor: '#333',
+    backgroundColor: '#007AFF',
   },
   whatsappIcon: {
     backgroundColor: '#25D366',
