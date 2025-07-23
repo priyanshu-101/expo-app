@@ -2,8 +2,8 @@ import { Entypo, FontAwesome, MaterialIcons } from "@expo/vector-icons";
 import React from "react";
 import { Linking } from "react-native";
 import styled from "styled-components/native";
-import Navbar from "./Navbar";
 import Footer from "./Footer";
+import Navbar from "./Navbar";
 
 const address = "4612/52 GROUND FLOOR, REGHAR PURA, KAROL BAGH-11005";
 const phone = "01128724925";
@@ -118,6 +118,7 @@ const Title = styled.Text`
   text-align: center;
   margin-bottom: 18px;
   letter-spacing: 1px;
+  font-family: 'Montserrat';
 `;
 
 const InfoGrid = styled.View`
@@ -153,6 +154,7 @@ const Label = styled.Text`
   color: #a0a0a0;
   font-weight: 600;
   margin-bottom: 2px;
+  font-family: 'Montserrat';
 `;
 
 const Value = styled.Text`
@@ -160,4 +162,5 @@ const Value = styled.Text`
   color: #e0e0e0;
   font-weight: 500;
   margin-bottom: 2px;
+  font-family: 'Montserrat';
 `;

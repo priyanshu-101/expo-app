@@ -9,7 +9,7 @@ const Footer = () => {
   const [status, setStatus] = useState('');
   const { width } = useWindowDimensions();
 
-  const handleChange = (name, value) => {
+  const handleChange = (name: string, value: string) => {
     setForm({ ...form, [name]: value });
   };
 
