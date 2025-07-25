@@ -1,7 +1,7 @@
 import * as DocumentPicker from 'expo-document-picker';
 import React, { useState } from 'react';
 import { ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
-import Footer from './Footer';
+import BottomNavigation from './BottomNavigation';
 import Navbar from './Navbar';
 
 type KYCFile = {
@@ -132,86 +132,92 @@ const KYC = () => {
   );
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <Navbar />
-      <Text style={styles.title}>KYC Details</Text>
-      {/* Company Details */}
-      <View style={styles.fieldset}>
-        <Text style={styles.legend}>Company Details</Text>
-        <View style={styles.grid}>
-          <View style={styles.group}><Text style={styles.label}>Name*</Text><TextInput style={styles.input} value={form.name} onChangeText={v => handleChange('name', v)} /></View>
-          <View style={styles.group}><Text style={styles.label}>Company Name</Text><TextInput style={styles.input} value={form.companyName} onChangeText={v => handleChange('companyName', v)} /></View>
-          <View style={styles.group}><Text style={styles.label}>Mobile*</Text><TextInput style={styles.input} value={form.mobile} onChangeText={v => handleChange('mobile', v)} keyboardType="phone-pad" /></View>
-          <View style={styles.group}><Text style={styles.label}>Email</Text><TextInput style={styles.input} value={form.email} onChangeText={v => handleChange('email', v)} keyboardType="email-address" /></View>
-          <View style={styles.group}><Text style={styles.label}>Address</Text><TextInput style={styles.input} value={form.address} onChangeText={v => handleChange('address', v)} /></View>
-          <View style={styles.group}><Text style={styles.label}>City</Text><TextInput style={styles.input} value={form.city} onChangeText={v => handleChange('city', v)} /></View>
-          <View style={styles.group}><Text style={styles.label}>Pin Code</Text><TextInput style={styles.input} value={form.pinCode} onChangeText={v => handleChange('pinCode', v)} keyboardType="number-pad" /></View>
-          <View style={styles.group}><Text style={styles.label}>GST No*</Text><TextInput style={styles.input} value={form.gst} onChangeText={v => handleChange('gst', v)} /></View>
-          <View style={styles.group}><Text style={styles.label}>Nature of Business</Text><TextInput style={styles.input} value={form.natureOfBusiness} onChangeText={v => handleChange('natureOfBusiness', v)} /></View>
-          <View style={styles.group}><Text style={styles.label}>Is Logistics Service required?</Text>
-            <View style={styles.pickerRow}>
-              <TouchableOpacity style={[styles.pickerButton, form.logisticsService === 'yes' && styles.pickerButtonActive]} onPress={() => handleChange('logisticsService', 'yes')}><Text style={styles.pickerButtonText}>Yes</Text></TouchableOpacity>
-              <TouchableOpacity style={[styles.pickerButton, form.logisticsService === 'no' && styles.pickerButtonActive]} onPress={() => handleChange('logisticsService', 'no')}><Text style={styles.pickerButtonText}>No</Text></TouchableOpacity>
+    <View style={styles.mainContainer}>
+      <ScrollView contentContainerStyle={styles.container}>
+        <Navbar />
+        <Text style={styles.title}>KYC Details</Text>
+        {/* Company Details */}
+        <View style={styles.fieldset}>
+          <Text style={styles.legend}>Company Details</Text>
+          <View style={styles.grid}>
+            <View style={styles.group}><Text style={styles.label}>Name*</Text><TextInput style={styles.input} value={form.name} onChangeText={v => handleChange('name', v)} /></View>
+            <View style={styles.group}><Text style={styles.label}>Company Name</Text><TextInput style={styles.input} value={form.companyName} onChangeText={v => handleChange('companyName', v)} /></View>
+            <View style={styles.group}><Text style={styles.label}>Mobile*</Text><TextInput style={styles.input} value={form.mobile} onChangeText={v => handleChange('mobile', v)} keyboardType="phone-pad" /></View>
+            <View style={styles.group}><Text style={styles.label}>Email</Text><TextInput style={styles.input} value={form.email} onChangeText={v => handleChange('email', v)} keyboardType="email-address" /></View>
+            <View style={styles.group}><Text style={styles.label}>Address</Text><TextInput style={styles.input} value={form.address} onChangeText={v => handleChange('address', v)} /></View>
+            <View style={styles.group}><Text style={styles.label}>City</Text><TextInput style={styles.input} value={form.city} onChangeText={v => handleChange('city', v)} /></View>
+            <View style={styles.group}><Text style={styles.label}>Pin Code</Text><TextInput style={styles.input} value={form.pinCode} onChangeText={v => handleChange('pinCode', v)} keyboardType="number-pad" /></View>
+            <View style={styles.group}><Text style={styles.label}>GST No*</Text><TextInput style={styles.input} value={form.gst} onChangeText={v => handleChange('gst', v)} /></View>
+            <View style={styles.group}><Text style={styles.label}>Nature of Business</Text><TextInput style={styles.input} value={form.natureOfBusiness} onChangeText={v => handleChange('natureOfBusiness', v)} /></View>
+            <View style={styles.group}><Text style={styles.label}>Is Logistics Service required?</Text>
+              <View style={styles.pickerRow}>
+                <TouchableOpacity style={[styles.pickerButton, form.logisticsService === 'yes' && styles.pickerButtonActive]} onPress={() => handleChange('logisticsService', 'yes')}><Text style={styles.pickerButtonText}>Yes</Text></TouchableOpacity>
+                <TouchableOpacity style={[styles.pickerButton, form.logisticsService === 'no' && styles.pickerButtonActive]} onPress={() => handleChange('logisticsService', 'no')}><Text style={styles.pickerButtonText}>No</Text></TouchableOpacity>
+              </View>
             </View>
           </View>
         </View>
-      </View>
-      {/* Proprietor/Partners */}
-      <View style={styles.fieldset}>
-        <Text style={styles.legend}>Proprietor/Partners</Text>
-        <View style={styles.grid}>
-          <View style={styles.group}><Text style={styles.label}>Name 1</Text><TextInput style={styles.input} value={form.proprietor1} onChangeText={v => handleChange('proprietor1', v)} /></View>
-          <View style={styles.group}><Text style={styles.label}>Name 2</Text><TextInput style={styles.input} value={form.proprietor2} onChangeText={v => handleChange('proprietor2', v)} /></View>
-          <View style={styles.group}><Text style={styles.label}>Mobile 1</Text><TextInput style={styles.input} value={form.proprietorMobile1} onChangeText={v => handleChange('proprietorMobile1', v)} keyboardType="phone-pad" /></View>
-          <View style={styles.group}><Text style={styles.label}>Mobile 2</Text><TextInput style={styles.input} value={form.proprietorMobile2} onChangeText={v => handleChange('proprietorMobile2', v)} keyboardType="phone-pad" /></View>
+        {/* Proprietor/Partners */}
+        <View style={styles.fieldset}>
+          <Text style={styles.legend}>Proprietor/Partners</Text>
+          <View style={styles.grid}>
+            <View style={styles.group}><Text style={styles.label}>Name 1</Text><TextInput style={styles.input} value={form.proprietor1} onChangeText={v => handleChange('proprietor1', v)} /></View>
+            <View style={styles.group}><Text style={styles.label}>Name 2</Text><TextInput style={styles.input} value={form.proprietor2} onChangeText={v => handleChange('proprietor2', v)} /></View>
+            <View style={styles.group}><Text style={styles.label}>Mobile 1</Text><TextInput style={styles.input} value={form.proprietorMobile1} onChangeText={v => handleChange('proprietorMobile1', v)} keyboardType="phone-pad" /></View>
+            <View style={styles.group}><Text style={styles.label}>Mobile 2</Text><TextInput style={styles.input} value={form.proprietorMobile2} onChangeText={v => handleChange('proprietorMobile2', v)} keyboardType="phone-pad" /></View>
+          </View>
         </View>
-      </View>
-      {/* Bank Details */}
-      <View style={styles.fieldset}>
-        <Text style={styles.legend}>Bank Details</Text>
-        <View style={styles.grid}>
-          <View style={styles.group}><Text style={styles.label}>Account No.</Text><TextInput style={styles.input} value={form.bankAccountNo} onChangeText={v => handleChange('bankAccountNo', v)} keyboardType="number-pad" /></View>
-          <View style={styles.group}><Text style={styles.label}>Bank Name</Text><TextInput style={styles.input} value={form.bankName} onChangeText={v => handleChange('bankName', v)} /></View>
-          <View style={styles.group}><Text style={styles.label}>IFSC Code</Text><TextInput style={styles.input} value={form.ifsc} onChangeText={v => handleChange('ifsc', v)} /></View>
-          <View style={styles.group}><Text style={styles.label}>Bank Account Name</Text><TextInput style={styles.input} value={form.bankAccountName} onChangeText={v => handleChange('bankAccountName', v)} /></View>
-          <View style={styles.group}><Text style={styles.label}>Branch</Text><TextInput style={styles.input} value={form.branch} onChangeText={v => handleChange('branch', v)} /></View>
+        {/* Bank Details */}
+        <View style={styles.fieldset}>
+          <Text style={styles.legend}>Bank Details</Text>
+          <View style={styles.grid}>
+            <View style={styles.group}><Text style={styles.label}>Account No.</Text><TextInput style={styles.input} value={form.bankAccountNo} onChangeText={v => handleChange('bankAccountNo', v)} keyboardType="number-pad" /></View>
+            <View style={styles.group}><Text style={styles.label}>Bank Name</Text><TextInput style={styles.input} value={form.bankName} onChangeText={v => handleChange('bankName', v)} /></View>
+            <View style={styles.group}><Text style={styles.label}>IFSC Code</Text><TextInput style={styles.input} value={form.ifsc} onChangeText={v => handleChange('ifsc', v)} /></View>
+            <View style={styles.group}><Text style={styles.label}>Bank Account Name</Text><TextInput style={styles.input} value={form.bankAccountName} onChangeText={v => handleChange('bankAccountName', v)} /></View>
+            <View style={styles.group}><Text style={styles.label}>Branch</Text><TextInput style={styles.input} value={form.branch} onChangeText={v => handleChange('branch', v)} /></View>
+          </View>
         </View>
-      </View>
-      {/* Persons Authorized for Delivery */}
-      <View style={styles.fieldset}>
-        <Text style={styles.legend}>Persons Authorized for Delivery</Text>
-        <View style={styles.grid}>
-          <View style={styles.group}><Text style={styles.label}>Name 1</Text><TextInput style={styles.input} value={form.deliveryPerson1} onChangeText={v => handleChange('deliveryPerson1', v)} /></View>
-          <View style={styles.group}><Text style={styles.label}>Name 2</Text><TextInput style={styles.input} value={form.deliveryPerson2} onChangeText={v => handleChange('deliveryPerson2', v)} /></View>
-          <View style={styles.group}><Text style={styles.label}>Name 3</Text><TextInput style={styles.input} value={form.deliveryPerson3} onChangeText={v => handleChange('deliveryPerson3', v)} /></View>
-          <View style={styles.group}><Text style={styles.label}>Name 4</Text><TextInput style={styles.input} value={form.deliveryPerson4} onChangeText={v => handleChange('deliveryPerson4', v)} /></View>
+        {/* Persons Authorized for Delivery */}
+        <View style={styles.fieldset}>
+          <Text style={styles.legend}>Persons Authorized for Delivery</Text>
+          <View style={styles.grid}>
+            <View style={styles.group}><Text style={styles.label}>Name 1</Text><TextInput style={styles.input} value={form.deliveryPerson1} onChangeText={v => handleChange('deliveryPerson1', v)} /></View>
+            <View style={styles.group}><Text style={styles.label}>Name 2</Text><TextInput style={styles.input} value={form.deliveryPerson2} onChangeText={v => handleChange('deliveryPerson2', v)} /></View>
+            <View style={styles.group}><Text style={styles.label}>Name 3</Text><TextInput style={styles.input} value={form.deliveryPerson3} onChangeText={v => handleChange('deliveryPerson3', v)} /></View>
+            <View style={styles.group}><Text style={styles.label}>Name 4</Text><TextInput style={styles.input} value={form.deliveryPerson4} onChangeText={v => handleChange('deliveryPerson4', v)} /></View>
+          </View>
         </View>
-      </View>
-      {/* Documents Required */}
-      <View style={styles.fieldset}>
-        <Text style={styles.legend}>Documents Required</Text>
-        <View style={styles.grid}>
-          {renderFileButton('Company Incorporation Certificate/Partnership Deed', 'docIncorporation')}
-          {renderFileButton('Communication Address Proof', 'docAddressProof')}
-          {renderFileButton('Company PAN', 'docCompanyPan')}
-          {renderFileButton('Memorandum of Association', 'docMemorandum')}
-          {renderFileButton('GST Certificate', 'docGstCertificate')}
-          {renderFileButton('Authorised Person 1 Photo', 'docAuthPerson1Photo')}
-          {renderFileButton('Authorised Person 2 Photo', 'docAuthPerson2Photo')}
-          {renderFileButton('Authorised Person 3 Photo', 'docAuthPerson3Photo')}
-          {renderFileButton('Authorised Person 4 Photo', 'docAuthPerson4Photo')}
+        {/* Documents Required */}
+        <View style={styles.fieldset}>
+          <Text style={styles.legend}>Documents Required</Text>
+          <View style={styles.grid}>
+            {renderFileButton('Company Incorporation Certificate/Partnership Deed', 'docIncorporation')}
+            {renderFileButton('Communication Address Proof', 'docAddressProof')}
+            {renderFileButton('Company PAN', 'docCompanyPan')}
+            {renderFileButton('Memorandum of Association', 'docMemorandum')}
+            {renderFileButton('GST Certificate', 'docGstCertificate')}
+            {renderFileButton('Authorised Person 1 Photo', 'docAuthPerson1Photo')}
+            {renderFileButton('Authorised Person 2 Photo', 'docAuthPerson2Photo')}
+            {renderFileButton('Authorised Person 3 Photo', 'docAuthPerson3Photo')}
+            {renderFileButton('Authorised Person 4 Photo', 'docAuthPerson4Photo')}
+          </View>
         </View>
-      </View>
-      <TouchableOpacity style={styles.submit} onPress={handleSubmit}>
-        <Text style={styles.submitText}>Submit KYC</Text>
-      </TouchableOpacity>
-      {!!status && <Text style={styles.status}>{status}</Text>}
-      <Footer />
-    </ScrollView>
+        <TouchableOpacity style={styles.submit} onPress={handleSubmit}>
+          <Text style={styles.submitText}>Submit KYC</Text>
+        </TouchableOpacity>
+        {!!status && <Text style={styles.status}>{status}</Text>}
+      </ScrollView>
+      <BottomNavigation activeRoute="kyc" />
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
+  mainContainer: {
+    flex: 1,
+    backgroundColor: '#000000',
+  },
   container: {
     paddingTop: 30,
     backgroundColor: '#181818',
