@@ -1,6 +1,6 @@
 import { usePathname, useRouter } from 'expo-router';
-import React from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import React, { useEffect, useRef } from 'react';
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 interface BottomNavigationProps {
   activeRoute?: string;
@@ -9,6 +9,27 @@ interface BottomNavigationProps {
 const BottomNavigation: React.FC<BottomNavigationProps> = ({ activeRoute }) => {
   const router = useRouter();
   const pathname = usePathname();
+  const scrollViewRef = useRef<ScrollView>(null);
+  const scrollX = useRef(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (scrollViewRef.current) {
+        scrollX.current += 2; // Move 2 pixels each time
+        scrollViewRef.current.scrollTo({
+          x: scrollX.current,
+          animated: false, // Disable animation for smooth continuous movement
+        });
+        
+        // Reset to beginning when reached end (creates infinite loop effect)
+        if (scrollX.current > 400) {
+          scrollX.current = 0;
+        }
+      }
+    }, 50); // Update every 50ms for smooth movement
+
+    return () => clearInterval(interval);
+  }, []);
 
   const handleNavigation = (route: string) => {
     switch (route) {
@@ -49,24 +70,67 @@ const BottomNavigation: React.FC<BottomNavigationProps> = ({ activeRoute }) => {
   ];
 
   return (
-    <View style={styles.bottomNavigation}>
-      {navigationItems.map((item) => (
-        <TouchableOpacity
-          key={item.route}
-          style={[styles.navItem, isActive(item.route) && styles.activeNavItem]}
-          onPress={() => handleNavigation(item.route)}
+    <>
+      <View style={styles.footerContainer}>
+        <Text style={styles.footerText}>© 2025 DD Bullions All Rights Reserved.</Text>
+      </View>
+      <View style={styles.sliderContainer}>
+        <ScrollView 
+          ref={scrollViewRef}
+          horizontal 
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.sliderContent}
         >
-          <Text style={styles.navIcon}>{item.icon}</Text>
-          <Text style={[styles.navText, isActive(item.route) && styles.activeNavText]}>
-            {item.label}
+          <Text style={styles.sliderText}>
+            ⏰ Rates are perfect at time : 12PM to 8PM ⏰ Rates are perfect at time : 12PM to 8PM ⏰ Rates are perfect at time : 12PM to 8PM ⏰
           </Text>
-        </TouchableOpacity>
-      ))}
-    </View>
+        </ScrollView>
+      </View>
+      <View style={styles.bottomNavigation}>
+        {navigationItems.map((item) => (
+          <TouchableOpacity
+            key={item.route}
+            style={[styles.navItem, isActive(item.route) && styles.activeNavItem]}
+            onPress={() => handleNavigation(item.route)}
+          >
+            <Text style={styles.navIcon}>{item.icon}</Text>
+            <Text style={[styles.navText, isActive(item.route) && styles.activeNavText]}>
+              {item.label}
+            </Text>
+          </TouchableOpacity>
+        ))}
+      </View>
+    </>
   );
 };
 
 const styles = StyleSheet.create({
+  footerContainer: {
+    backgroundColor: '#bfa14a',
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    alignItems: 'center',
+    borderTopWidth: 1,
+    borderTopColor: '#333333',
+  },
+  footerText: {
+    color: '#000000',
+    fontSize: 12,
+    textAlign: 'center',
+  },
+  sliderContainer: {
+    backgroundColor: '#2a2a2a',
+    paddingVertical: 8,
+    overflow: 'hidden',
+  },
+  sliderContent: {
+    paddingHorizontal: 16,
+  },
+  sliderText: {
+    color: '#bfa14a',
+    fontSize: 14,
+    fontWeight: '600',
+  },
   bottomNavigation: {
     flexDirection: 'row',
     backgroundColor: '#1a1a1a',
