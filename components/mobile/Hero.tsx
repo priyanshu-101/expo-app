@@ -1,9 +1,8 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { ActivityIndicator, ScrollView, StyleSheet, Text, View } from 'react-native';
-import Footer from './Footer';
+import React, { useEffect, useState } from 'react';
+import { ActivityIndicator, FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import BottomNavigation from './BottomNavigation';
 import Navbar from './Navbar';
 
-const HIGHLIGHT_DURATION = 700; // ms
 const API_BASE = 'https://ddbullions.in/api/';
 
 interface Product {
@@ -21,54 +20,17 @@ interface Rates {
   silver?: { spot?: { buy?: number; sell?: number }, costing?: { buy?: number; sell?: number } };
 }
 
-const MOBILE_BREAKPOINT = 768;
-
 const Home = () => {
-  const [spot, setSpot] = useState<{ [key: string]: any }>({});
   const [products, setProducts] = useState<Product[]>([]);
   const [goldProducts, setGoldProducts] = useState<Product[]>([]);
   const [silverProducts, setSilverProducts] = useState<Product[]>([]);
-  const [timestamp, setTimestamp] = useState<number | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [priceHighlights, setPriceHighlights] = useState<{ [key: string]: string }>({});
-  const prevPrices = useRef<{ [key: string]: { buy: number; sell: number } }>({});
-  const [usdInr, setUsdInr] = useState<number | null>(null);
-  const [usdInrError, setUsdInrError] = useState<string>('');
-  const [usdInrHighlight, setUsdInrHighlight] = useState<string>('');
-  const prevUsdInr = useRef<{ buy: number | null; sell: number | null }>({ buy: null, sell: null });
-  const [mantrGoldCosting, setMantrGoldCosting] = useState<any>(null);
-  const [mantrGoldCostingError, setMantrGoldCostingError] = useState<string>('');
-  const [mantrGoldCostings, setMantrGoldCostings] = useState<any[]>([]);
-  const [mantrGoldCostingsError, setMantrGoldCostingsError] = useState<string>('');
-  const [showForgotModal, setShowForgotModal] = useState<boolean>(false);
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
-  const [jwt, setJwt] = useState<string | null>(null);
-  const [loginEmail, setLoginEmail] = useState<string>('');
-  const [loginPassword, setLoginPassword] = useState<string>('');
-  const [loginError, setLoginError] = useState<string>('');
-  const [forgotEmail, setForgotEmail] = useState<string>('');
-  const [resetToken, setResetToken] = useState<string>('');
-  const [resetPassword, setResetPassword] = useState<string>('');
-  const [resetStep, setResetStep] = useState<number>(1);
-  const [margin, setMargin] = useState<{ gold: number; silver: number }>({ gold: 0, silver: 0 });
-  const [marginError, setMarginError] = useState<string>('');
-  const [liveRates, setLiveRates] = useState<{ goldProducts: any[]; silverProducts: any[]; goldMargin: number; silverMargin: number }>({ goldProducts: [], silverProducts: [], goldMargin: 0, silverMargin: 0 });
-  const [liveRatesError, setLiveRatesError] = useState<string>('');
-  const [productMargins, setProductMargins] = useState<{ [key: string]: ProductMargin }>({});
-  const [editingMargins, setEditingMargins] = useState<{ [key: string]: any }>({});
   const [mantrRates, setMantrRates] = useState<Rates | null>(null);
-  const [mantrRatesError, setMantrRatesError] = useState<string>('');
-  const [showMarginModal, setShowMarginModal] = useState<boolean>(false);
-  const [selectedProduct, setSelectedProduct] = useState<string | null>(null);
-  const [selectedSide, setSelectedSide] = useState<'buy' | 'sell'>('buy');
-  const [newMarginValue, setNewMarginValue] = useState<number>(0);
-  const [marginUpdateSuccess, setMarginUpdateSuccess] = useState<boolean>(false);
-  const [marginUpdateError, setMarginUpdateError] = useState<string>('');
+  const [productMargins, setProductMargins] = useState<{ [key: string]: ProductMargin }>({});
   const [displayPrices, setDisplayPrices] = useState<{ [key: string]: { buy: number; sell: number } }>({});
-  const [specialHighlights, setSpecialHighlights] = useState<{ [key: string]: string }>({});
-  const [specialPrev, setSpecialPrev] = useState<{ [key: string]: any }>({});
-  const [usdInrAnim, setUsdInrAnim] = useState<{ buy: boolean; sell: boolean }>({ buy: false, sell: false });
+  const [activeTab, setActiveTab] = useState<'gold' | 'silver' | 'unfix'>('gold');
 
   useEffect(() => {
     fetch(`${API_BASE}/products`).then(res => res.json()).then(res => {
@@ -96,18 +58,18 @@ const Home = () => {
     const fetchMantrRates = async () => {
       try {
         const res = await fetch(`${API_BASE}/mantrjewels-rates`);
-        console.log("Mantr", res)
         const data = await res.json();
+        console.log("Mantr API Response:", data);
         if (data.success && data.data) {
+          console.log("Setting mantr rates:", data.data);
           setMantrRates(data.data);
-          setMantrRatesError('');
         } else {
+          console.log("API failed or no data");
           setMantrRates(null);
-          setMantrRatesError('Unavailable');
         }
-      } catch (err) {
+      } catch (error) {
+        console.log("API Error:", error);
         setMantrRates(null);
-        setMantrRatesError('Unavailable');
       }
     };
     fetchMantrRates();
@@ -115,298 +77,366 @@ const Home = () => {
     return () => clearInterval(interval);
   }, []);
 
-  const getLiveCosting = (product: string, side: 'buy' | 'sell'): number => {
-    if (productMargins[product] && productMargins[product].metal === 'gold') {
-      if (mantrRates && mantrRates.gold && mantrRates.gold.costing) {
-        return Number(mantrRates.gold.costing[side]) || 0;
-      }
-      return 0;
-    } else if (productMargins[product] && productMargins[product].metal === 'silver') {
-      if (mantrRates && mantrRates.silver && mantrRates.silver.costing) {
-        return Number(mantrRates.silver.costing[side]) || 0;
-      }
-      return 0;
-    }
-    return 0;
-  };
-
-  const getProductPrice = (product: string, side: 'buy' | 'sell'): number => {
-    const margin = productMargins[product] && typeof productMargins[product][`${side}_margin`] === 'number' ? productMargins[product][`${side}_margin`] : 0;
-    const costing = getLiveCosting(product, side);
-    return costing + margin;
-  };
-
   useEffect(() => {
+    if (products.length === 0) return;
+    
     const newPrices: { [key: string]: { buy: number; sell: number } } = {};
     products.forEach((product: Product) => {
+      const buyMargin = productMargins[product.product_name] && typeof productMargins[product.product_name]['buy_margin'] === 'number' ? productMargins[product.product_name]['buy_margin'] : 0;
+      const sellMargin = productMargins[product.product_name] && typeof productMargins[product.product_name]['sell_margin'] === 'number' ? productMargins[product.product_name]['sell_margin'] : 0;
+      
+      // Calculate costing inline
+      let buyCosting = 0;
+      let sellCosting = 0;
+      
+      if (productMargins[product.product_name] && productMargins[product.product_name].metal === 'gold') {
+        if (mantrRates && mantrRates.gold && mantrRates.gold.costing) {
+          buyCosting = Number(mantrRates.gold.costing.buy) || 0;
+          sellCosting = Number(mantrRates.gold.costing.sell) || 0;
+        }
+      } else if (productMargins[product.product_name] && productMargins[product.product_name].metal === 'silver') {
+        if (mantrRates && mantrRates.silver && mantrRates.silver.costing) {
+          buyCosting = Number(mantrRates.silver.costing.buy) || 0;
+          sellCosting = Number(mantrRates.silver.costing.sell) || 0;
+        }
+      }
+      
       newPrices[product.product_name] = {
-        buy: getProductPrice(product.product_name, 'buy'),
-        sell: getProductPrice(product.product_name, 'sell'),
+        buy: buyCosting + buyMargin,
+        sell: sellCosting + sellMargin,
       };
     });
-    const highlights: { [key: string]: string } = {};
-    Object.keys(newPrices).forEach((product: string) => {
-      if (displayPrices[product]) {
-        if (newPrices[product].buy !== displayPrices[product].buy) {
-          highlights[product + '_buy'] = newPrices[product].buy > displayPrices[product].buy ? 'green' : 'red';
-          setTimeout(() => {
-            setPriceHighlights(h => ({ ...h, [product + '_buy']: '' }));
-          }, HIGHLIGHT_DURATION);
-        }
-        if (newPrices[product].sell !== displayPrices[product].sell) {
-          highlights[product + '_sell'] = newPrices[product].sell > displayPrices[product].sell ? 'green' : 'red';
-          setTimeout(() => {
-            setPriceHighlights(h => ({ ...h, [product + '_sell']: '' }));
-          }, HIGHLIGHT_DURATION);
-        }
-      }
-    });
-    setPriceHighlights(h => ({ ...h, ...highlights }));
+    
     setDisplayPrices(newPrices);
-  }, [productMargins, mantrRates]);
-
-  useEffect(() => {
-    const newSpecial: { [key: string]: any } = {};
-    if (mantrRates && mantrRates.inr) {
-      newSpecial['usdInr'] = mantrRates.inr.buy ?? mantrRates.inr.sell;
-    }
-    if (mantrRates && mantrRates.gold && mantrRates.gold.spot) {
-      newSpecial['goldSpotBuy'] = mantrRates.gold.spot.buy ?? mantrRates.gold.spot.sell;
-    }
-    if (mantrRates && mantrRates.gold && mantrRates.gold.costing) {
-      newSpecial['goldCostingBuy'] = mantrRates.gold.costing.buy ?? mantrRates.gold.costing.sell;
-    }
-    if (mantrRates && mantrRates.silver && mantrRates.silver.spot) {
-      newSpecial['silverSpotBuy'] = mantrRates.silver.spot.buy ?? mantrRates.silver.spot.sell;
-    }
-    if (mantrRates && mantrRates.silver && mantrRates.silver.costing) {
-      newSpecial['silverCostingBuy'] = mantrRates.silver.costing.buy ?? mantrRates.silver.costing.sell;
-    }
-    const highlights: { [key: string]: string } = {};
-    Object.keys(newSpecial).forEach((key: string) => {
-      if (specialPrev[key] !== undefined && newSpecial[key] !== specialPrev[key]) {
-        if (Number(newSpecial[key]) > Number(specialPrev[key])) highlights[key] = 'green';
-        else if (Number(newSpecial[key]) < Number(specialPrev[key])) highlights[key] = 'red';
-        setTimeout(() => {
-          setSpecialHighlights(h => ({ ...h, [key]: '' }));
-        }, HIGHLIGHT_DURATION);
-      }
-    });
-    setSpecialHighlights(h => ({ ...h, ...highlights }));
-    setSpecialPrev(newSpecial);
-  }, [mantrRates]);
+  }, [productMargins, mantrRates, products]);
 
   useEffect(() => {
     setLoading(false);
   }, []);
 
-  const SpecialCard = ({ label, value, highlight }: { label: string; value: number | string | undefined; highlight: string }) => (
-    <View style={[styles.specialCard, highlight === 'green' && styles.specialCardUp, highlight === 'red' && styles.specialCardDown]}>
-      <Text style={styles.specialCardLabel}>{label}</Text>
-      <Text style={styles.specialCardValue}>{value ?? '-'}</Text>
+  if (loading) return <View style={styles.heroLoading}><ActivityIndicator size="large" color="#FFB000" /><Text style={{color: '#ffffff', marginTop: 10}}>Loading...</Text></View>;
+  if (error) return <View style={styles.heroLoading}><Text style={{color: '#ffffff'}}>Error: {error}</Text></View>;
+
+  const getCurrentProducts = () => {
+    switch (activeTab) {
+      case 'gold':
+        return goldProducts;
+      case 'silver':
+        return silverProducts;
+      case 'unfix':
+        return [...goldProducts, ...silverProducts];
+      default:
+        return goldProducts;
+    }
+  };
+
+  const getCurrentMetrics = () => {
+    const baseInr = mantrRates?.inr?.buy ?? mantrRates?.inr?.sell ?? 86.448;
+    
+    if (activeTab === 'gold') {
+      const goldSpot = mantrRates?.gold?.spot?.buy ?? mantrRates?.gold?.spot?.sell ?? 3389.68;
+      const goldCosting = mantrRates?.gold?.costing?.buy ?? mantrRates?.gold?.costing?.sell ?? 99420;
+      
+      return {
+        spot: goldSpot,
+        spotLow: mantrRates?.gold?.spot?.sell ?? goldSpot,
+        spotHigh: mantrRates?.gold?.spot?.buy ?? goldSpot,
+        inr: baseInr,
+        inrLow: mantrRates?.inr?.sell ?? baseInr,
+        inrHigh: mantrRates?.inr?.buy ?? baseInr,
+        costing: goldCosting,
+        costingLow: mantrRates?.gold?.costing?.sell ?? goldCosting,
+        costingHigh: mantrRates?.gold?.costing?.buy ?? goldCosting
+      };
+    } else {
+      const silverSpot = mantrRates?.silver?.spot?.buy ?? mantrRates?.silver?.spot?.sell ?? 98880;
+      const silverCosting = mantrRates?.silver?.costing?.buy ?? mantrRates?.silver?.costing?.sell ?? 99780;
+      
+      return {
+        spot: silverSpot,
+        spotLow: mantrRates?.silver?.spot?.sell ?? silverSpot,
+        spotHigh: mantrRates?.silver?.spot?.buy ?? silverSpot,
+        inr: baseInr,
+        inrLow: mantrRates?.inr?.sell ?? baseInr,
+        inrHigh: mantrRates?.inr?.buy ?? baseInr,
+        costing: silverCosting,
+        costingLow: mantrRates?.silver?.costing?.sell ?? silverCosting,
+        costingHigh: mantrRates?.silver?.costing?.buy ?? silverCosting
+      };
+    }
+  };
+
+  const renderTabButton = (tab: 'gold' | 'silver' | 'unfix', label: string) => (
+    <TouchableOpacity
+      key={tab}
+      style={[styles.tabButton, activeTab === tab && styles.activeTabButton]}
+      onPress={() => setActiveTab(tab)}
+    >
+      <Text style={[styles.tabText, activeTab === tab && styles.activeTabText]}>{label}</Text>
+    </TouchableOpacity>
+  );
+
+  const renderProductItem = ({ item }: { item: Product }) => (
+    <View style={styles.productRow}>
+      <View style={styles.productInfo}>
+        <Text style={styles.productNameText}>
+          {item.product_name.toUpperCase().replace('GOLD ', '').replace('SILVER ', '')}
+        </Text>
+        <Text style={styles.productWeight}>1KG (24th July)</Text>
+      </View>
+      <View style={styles.priceContainer}>
+        <Text style={[styles.priceText, priceHighlights[item.product_name+'_buy'] === 'green' && styles.priceUp, priceHighlights[item.product_name+'_buy'] === 'red' && styles.priceDown]}>
+          {displayPrices[item.product_name]?.buy || 0}
+        </Text>
+        <Text style={styles.priceSubText}>L : {(displayPrices[item.product_name]?.buy || 0) - 200}</Text>
+      </View>
+      <View style={styles.priceContainer}>
+        <Text style={[styles.priceText, priceHighlights[item.product_name+'_sell'] === 'green' && styles.priceUp, priceHighlights[item.product_name+'_sell'] === 'red' && styles.priceDown]}>
+          {displayPrices[item.product_name]?.sell || 0}
+        </Text>
+        <Text style={styles.priceSubText}>H : {(displayPrices[item.product_name]?.sell || 0) + 200}</Text>
+      </View>
     </View>
   );
 
-  const renderProductRow = (product: Product, isGold: boolean) => (
-    <View key={product.product_name} style={styles.rateRow}>
-      <Text style={styles.productName}>{product.product_name}</Text>
-      <View style={{flex: 1, alignItems: 'center'}}>
-        <Text style={[styles.priceCell, priceHighlights[product.product_name+'_buy'] === 'green' && styles.priceUp, priceHighlights[product.product_name+'_buy'] === 'red' && styles.priceDown]}>
-          {displayPrices[product.product_name]?.buy}
-        </Text>
-        {typeof productMargins[product.product_name]?.buy_margin === 'number' && productMargins[product.product_name]?.buy_margin !== 0 && (
-          <Text style={styles.marginGold}>{productMargins[product.product_name].buy_margin > 0 ? `+${productMargins[product.product_name].buy_margin}` : `-${Math.abs(productMargins[product.product_name].buy_margin)}`}</Text>
-        )}
-      </View>
-      <View style={{flex: 1, alignItems: 'center'}}>
-        <Text style={[styles.priceCell, priceHighlights[product.product_name+'_sell'] === 'green' && styles.priceUp, priceHighlights[product.product_name+'_sell'] === 'red' && styles.priceDown]}>
-          {displayPrices[product.product_name]?.sell}
-        </Text>
-        {typeof productMargins[product.product_name]?.sell_margin === 'number' && productMargins[product.product_name]?.sell_margin !== 0 && (
-          <Text style={styles.marginGold}>{productMargins[product.product_name].sell_margin > 0 ? `+${productMargins[product.product_name].sell_margin}` : `-${Math.abs(productMargins[product.product_name].sell_margin)}`}</Text>
-        )}
-      </View>
-    </View>
-  );
-
-  if (loading) return <View style={styles.heroLoading}><ActivityIndicator size="large" color="#bfa14a" /><Text>Loading...</Text></View>;
-  if (error) return <View style={styles.heroLoading}><Text>Error: {error}</Text></View>;
+  const metrics = getCurrentMetrics();
 
   return (
-    <ScrollView style={styles.heroSection} contentContainerStyle={{ alignItems: 'center' }}>
+    <View style={styles.container}>
       <Navbar />
-      {/* Special Cards Row - Gold */}
-      <View style={styles.specialCardsRow}>
-        <SpecialCard label="USD/INR" value={mantrRates?.inr?.buy ?? mantrRates?.inr?.sell} highlight={specialHighlights['usdInr']} />
-        <SpecialCard label="Gold Spot" value={mantrRates?.gold?.spot?.buy ?? mantrRates?.gold?.spot?.sell} highlight={specialHighlights['goldSpotBuy']} />
-        <SpecialCard label="Gold Costing" value={mantrRates?.gold?.costing?.buy ?? mantrRates?.gold?.costing?.sell} highlight={specialHighlights['goldCostingBuy']} />
+      
+      {/* Tab Navigation */}
+      <View style={styles.tabContainer}>
+        {renderTabButton('gold', 'GOLD RATES')}
+        {renderTabButton('silver', 'SILVER RATES')}
       </View>
-      {/* Gold Products Table */}
-      <Text style={styles.productsTitle}>Gold Products</Text>
-      <View style={styles.tableHeader}>
-        <Text style={styles.headerCell}>PRODUCT</Text>
-        <Text style={styles.headerCell}>BUY</Text>
-        <Text style={styles.headerCell}>SELL</Text>
+
+      {/* Metrics Cards */}
+      <View style={styles.metricsContainer}>
+        <View style={styles.metricCard}>
+          <Text style={styles.metricLabel}>{activeTab === 'gold' ? 'GOLD SPOT' : 'SILVER SPOT'}</Text>
+          <Text style={styles.metricValue}>{metrics.spot.toLocaleString()}</Text>
+          {/* <Text style={styles.metricRange}>{metrics.spotLow} | {metrics.spotHigh}</Text> */}
+        </View>
+        
+        <View style={styles.metricCard}>
+          <Text style={styles.metricLabel}>INR</Text>
+          <Text style={styles.metricValue}>{metrics.inr && typeof metrics.inr === 'number' ? metrics.inr.toString() : '86.448'}</Text>
+          {/* <Text style={styles.metricRange}>{metrics.inrLow && typeof metrics.inrLow === 'number' ? metrics.inrLow.toString() : '86.345'} | {metrics.inrHigh && typeof metrics.inrHigh === 'number' ? metrics.inrHigh.toString() : '86.478'}</Text> */}
+        </View>
+        
+        <View style={styles.metricCard}>
+          <Text style={styles.metricLabel}>{activeTab === 'gold' ? 'GOLD COSTING' : 'SILVER COSTING'}</Text>
+          <Text style={styles.metricValue}>{metrics.costing.toLocaleString()}</Text>
+          {/* <Text style={styles.metricRange}>{metrics.costingLow} | {metrics.costingHigh}</Text> */}
+        </View>
       </View>
-      {goldProducts.map((product: Product) => renderProductRow(product, true))}
-      {/* Special Cards Row - Silver */}
-      <View style={styles.specialCardsRow}>
-        <SpecialCard label="USD/INR" value={mantrRates?.inr?.buy ?? mantrRates?.inr?.sell} highlight={specialHighlights['usdInr']} />
-        <SpecialCard label="Silver Spot" value={mantrRates?.silver?.spot?.buy ?? mantrRates?.silver?.spot?.sell} highlight={specialHighlights['silverSpotBuy']} />
-        <SpecialCard label="Silver Costing" value={mantrRates?.silver?.costing?.buy ?? mantrRates?.silver?.costing?.sell} highlight={specialHighlights['silverCostingBuy']} />
+
+      {/* Products Section */}
+      <View style={styles.productsSection}>
+        <View style={styles.productsHeader}>
+          <View style={styles.productNameHeader}>
+            <Text style={styles.productsHeaderText}>PRODUCTS</Text>
+          </View>
+          <View style={styles.priceHeader}>
+            <Text style={styles.productsHeaderText}>BUY</Text>
+          </View>
+          <View style={styles.priceHeader}>
+            <Text style={styles.productsHeaderText}>SELL</Text>
+          </View>
+        </View>
+        
+        <FlatList
+          data={getCurrentProducts()}
+          renderItem={renderProductItem}
+          keyExtractor={(item) => item.product_name}
+          style={styles.productsList}
+          showsVerticalScrollIndicator={false}
+        />
       </View>
-      {/* Silver Products Table */}
-      <Text style={styles.productsTitle}>Silver Products</Text>
-      <View style={styles.tableHeader}>
-        <Text style={styles.headerCell}>PRODUCT</Text>
-        <Text style={styles.headerCell}>BUY</Text>
-        <Text style={styles.headerCell}>SELL</Text>
+
+      {/* Footer */}
+      <View style={styles.footerContainer}>
+        <Text style={styles.footerText}>© 2025 DD Bullions All Rights Reserved.</Text>
       </View>
-      {silverProducts.map((product: Product) => renderProductRow(product, false))}
-      <Footer />
-    </ScrollView>
+
+      {/* Bottom Navigation */}
+      <BottomNavigation activeRoute="home" />
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
-  heroSection: {
-    backgroundColor: '#121212',
-    minHeight: '100%',
-    paddingTop: 20,
-    paddingBottom: 20,
-    marginTop:10
+  container: {
+    flex: 1,
+    backgroundColor: '#000000',
   },
   heroLoading: {
-    minHeight: 300,
+    flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#121212',
+    backgroundColor: '#000000',
+    color: '#ffffff',
   },
-  specialCardsRow: {
+  tabContainer: {
     flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'center',
-    marginBottom: 18,
-    marginTop: 20,
+    backgroundColor: '#000000',
+    marginHorizontal: 0,
   },
-  specialCard: {
-    backgroundColor: '#1e1e1e',
-    borderRadius: 16,
-    padding: 18,
-    minWidth: 110,
-    width: '30%',
+  tabButton: {
+    flex: 1,
+    paddingVertical: 12,
     alignItems: 'center',
-    marginHorizontal: 6,
-    marginBottom: 8,
-    borderWidth: 1.5,
-    borderColor: '#bfa14a',
-    shadowColor: '#bfa14a',
-    shadowOpacity: 0.08,
-    shadowRadius: 8,
-    shadowOffset: { width: 0, height: 2 },
+    backgroundColor: '#333333',
+    borderRightWidth: 1,
+    borderRightColor: '#666666',
   },
-  specialCardUp: {
-    backgroundColor: '#2e7d32',
+  activeTabButton: {
+    backgroundColor: '#ffffff',
   },
-  specialCardDown: {
-    backgroundColor: '#b71c1c',
+  tabText: {
+    color: '#ffffff',
+    fontSize: 13,
+    fontWeight: '600',
   },
-  specialCardLabel: {
-    fontWeight: '700',
-    color: '#bfa14a',
+  activeTabText: {
+    color: '#000000',
+  },
+  metricsContainer: {
+    flexDirection: 'row',
+    backgroundColor: '#000000',
+    paddingVertical: 15,
+    paddingHorizontal: 8,
+  },
+  metricCard: {
+    flex: 1,
+    backgroundColor: '#000000',
+    borderRadius: 6,
+    padding: 12,
+    marginHorizontal: 3,
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#ffffff',
+  },
+  metricLabel: {
+    color: '#ffffff',
     fontSize: 11,
-    marginBottom: 4,
+    fontWeight: '700',
+    marginBottom: 3,
     textAlign: 'center',
+  },
+  metricValue: {
+    color: '#00D4AA',
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 2,
+  },
+  metricRange: {
+    color: '#ffffff',
+    fontSize: 9,
+    fontWeight: '500',
+  },
+  productsSection: {
+    flex: 1,
+    backgroundColor: '#000000',
+    paddingHorizontal: 0,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  productsHeader: {
+    flexDirection: 'row',
+    backgroundColor: '#000000',
+    paddingVertical: 12,
+    paddingHorizontal: 15,
+    borderBottomWidth: 1,
+    borderBottomColor: '#333333',
     width: '100%',
-    maxWidth: 65,
-  },
-  specialCardValue: {
-    fontSize: 22,
-    fontWeight: '700',
-    color: '#fff',
-    marginTop: 2,
-  },
-  productsTitle: {
-    fontWeight: '700',
-    color: '#bfa14a',
-    fontSize: 28,
-    marginBottom: 4,
-    marginTop: 10,
     alignSelf: 'center',
   },
-  tableHeader: {
-    flexDirection: 'row',
-    backgroundColor: '#2a2a2a',
-    borderRadius: 8,
-    marginBottom: 12,
-    marginTop: 8,
-    paddingVertical: 14,
-    paddingHorizontal: 12,
-    justifyContent: 'space-between',
-  },
-  headerCell: {
+  productsHeaderText: {
     color: '#bfa14a',
+    fontSize: 13,
     fontWeight: '700',
-    fontSize: 17,
-    flex: 1,
     textAlign: 'center',
-    paddingHorizontal: 8,
-    paddingVertical: 2,
   },
-  rateRow: {
-    flexDirection: 'row',
-    backgroundColor: '#1e1e1e',
-    borderBottomWidth: 1,
-    borderBottomColor: '#333',
-    paddingVertical: 14,
-    paddingHorizontal: 12,
+  productNameHeader: {
+    flex: 1.2,
     alignItems: 'center',
-    justifyContent: 'space-between',
-    marginBottom: 8,
-    borderRadius: 6,
+    justifyContent: 'center',
   },
-  productName: {
+  priceHeader: {
     flex: 1,
-    color: '#e0e0e0',
-    fontWeight: '600',
-    fontSize: 16,
-    textAlign: 'center',
-    paddingHorizontal: 8,
-    paddingVertical: 2,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
-  priceCell: {
+  productsList: {
     flex: 1,
-    color: '#e0e0e0',
+    width: '100%',
+    alignSelf: 'center',
+  },
+  productRow: {
+    flexDirection: 'row',
+    backgroundColor: '#000000',
+    paddingVertical: 12,
+    paddingHorizontal: 15,
+    borderBottomWidth: 1,
+    borderBottomColor: '#333333',
+    alignItems: 'center',
+  },
+  productInfo: {
+    flex: 1.2,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  productNameText: {
+    color: '#ffffff',
+    fontSize: 13,
     fontWeight: '600',
+  },
+  productWeight: {
+    color: '#888888',
+    fontSize: 11,
+    marginTop: 2,
+  },
+  priceContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  priceText: {
+    color: '#ffffff',
     fontSize: 16,
-    textAlign: 'center',
-    borderRadius: 6,
-    paddingVertical: 8,
-    paddingHorizontal: 8,
-    marginHorizontal: 2,
+    fontWeight: 'bold',
+  },
+  priceSubText: {
+    color: '#888888',
+    fontSize: 10,
+    marginTop: 1,
   },
   priceUp: {
-    color: '#1db954',
-    fontWeight: 'bold',
-    backgroundColor: 'rgba(22, 163, 74, 0.2)',
+    color: '#00ff00',
   },
   priceDown: {
-    color: '#e53935',
-    fontWeight: 'bold',
-    backgroundColor: 'rgba(225, 29, 72, 0.2)',
+    color: '#ff0000',
   },
-  marginGold: {
-    backgroundColor: '#fbbf24',
-    color: '#181818',
-    fontWeight: '700',
-    borderRadius: 6,
-    paddingHorizontal: 8,
-    marginLeft: 0,
-    fontSize: 13,
-    textAlign: 'center',
-    alignSelf: 'center',
+  footerContainer: {
+    backgroundColor: '#bfa14a',
+    paddingVertical: 8,
+    paddingHorizontal: 15,
+    alignItems: 'center',
+  },
+  footerText: {
+    color: '#000000',
+    fontSize: 11,
+    fontWeight: '600',
+    fontStyle: 'italic',
+  },
+  footerSubText: {
+    color: '#000000',
+    fontSize: 9,
     marginTop: 2,
+    fontWeight: '500',
   },
 });
 
-export default Home; 
+export default Home;
