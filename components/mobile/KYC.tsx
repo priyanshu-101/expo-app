@@ -133,8 +133,8 @@ const KYC = () => {
 
   return (
     <View style={styles.mainContainer}>
+      <Navbar />
       <ScrollView contentContainerStyle={styles.container}>
-        <Navbar />
         <Text style={styles.title}>KYC Details</Text>
         {/* Company Details */}
         <View style={styles.fieldset}>

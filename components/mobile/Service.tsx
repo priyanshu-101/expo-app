@@ -22,8 +22,8 @@ const aboutParagraph =
 
 const Service = () => (
   <View style={styles.container}>
+    <Navbar />
     <View style={styles.section}>
-      <Navbar /> 
       <View style={styles.header}>
         <Text style={styles.title}>Our Services</Text>
       </View>
@@ -48,7 +48,7 @@ const styles = StyleSheet.create({
   },
   section: {
     flex: 1,
-       backgroundColor: '#000000',
+    backgroundColor: '#000000',
     paddingTop: 20,
     justifyContent: 'center',
     alignItems: 'center',

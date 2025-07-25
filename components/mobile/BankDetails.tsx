@@ -22,8 +22,8 @@ const BANK_DETAILS_2 = {
 
 const BankDetails = () => (
   <View style={styles.container}>
+    <Navbar />
     <ScrollView style={styles.scrollContainer} contentContainerStyle={styles.content}>
-      <Navbar />
       <View style={styles.card}>
         <Text style={styles.title}>Bank Details - YES BANK</Text>
         <View style={styles.list}>
