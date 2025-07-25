@@ -1,7 +1,7 @@
 import { FontAwesome5 } from '@expo/vector-icons';
 import React from 'react';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
-import Footer from './Footer';
+import { StyleSheet, Text, View } from 'react-native';
+import BottomNavigation from './BottomNavigation';
 import Navbar from './Navbar';
 
 const services = [
@@ -21,42 +21,45 @@ const aboutParagraph =
   'We are committed to providing top-notch gold and silver services, including exchange, melting, buying, selling, and instant gold checking. Our processes adhere to the highest international standards, ensuring trust, transparency, and satisfaction for all our clients. Whether you are looking to refine old gold, check purity, or trade precious metals, our expert team is here to assist you every step of the way.';
 
 const Service = () => (
-  <ScrollView style={styles.section} contentContainerStyle={{paddingBottom: 32}}>
-    <Navbar /> 
-    <View style={styles.header}>
-      <Text style={styles.title}>Our Services</Text>
+  <View style={styles.container}>
+    <View style={styles.section}>
+      <Navbar /> 
+      <View style={styles.header}>
+        <Text style={styles.title}>Our Services</Text>
+      </View>
+      <View style={styles.cardsContainer}>
+        {services.map((service, idx) => (
+          <View style={styles.card} key={idx}>
+            <View style={styles.icon}>{service.icon}</View>
+            <Text style={styles.cardTitle}>{service.title}</Text>
+            <Text style={styles.desc}>{service.description}</Text>
+          </View>
+        ))}
+      </View>
     </View>
-    <View style={styles.cardsContainer}>
-      {services.map((service, idx) => (
-        <View style={styles.card} key={idx}>
-          <View style={styles.icon}>{service.icon}</View>
-          <Text style={styles.cardTitle}>{service.title}</Text>
-          <Text style={styles.desc}>{service.description}</Text>
-        </View>
-      ))}
-    </View>
-    {/*
-    <View style={styles.paragraphCard}>
-      <Text>{aboutParagraph}</Text>
-    </View>
-    */}
-    <Footer />
-  </ScrollView>
+    <BottomNavigation activeRoute="service" />
+  </View>
 );
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#000000',
+  },
   section: {
     flex: 1,
-    backgroundColor: '#121212',
-    paddingTop: 32,
+       backgroundColor: '#000000',
+    paddingTop: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   header: {
     alignItems: 'center',
-    marginBottom: 24,
+    marginBottom: 20,
   },
   title: {
     color: '#bfa14a',
-    fontSize: 28,
+    fontSize: 24,
     fontWeight: '700',
     letterSpacing: 1,
     marginBottom: 0,
@@ -65,8 +68,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'center',
-    gap: 20,
-    marginBottom: 24,
+    gap: 16,
+    marginBottom: 20,
     paddingHorizontal: 16,
   },
   card: {
@@ -78,27 +81,27 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 8 },
     shadowOpacity: 0.08,
     shadowRadius: 32,
-    paddingVertical: 24,
-    paddingHorizontal: 16,
-    minWidth: 180,
-    maxWidth: 320,
+    paddingVertical: 20,
+    paddingHorizontal: 14,
+    minWidth: 160,
+    maxWidth: 280,
     flex: 1,
     alignItems: 'center',
-    margin: 10,
+    margin: 8,
   },
   icon: {
-    marginBottom: 12,
+    marginBottom: 10,
   },
   cardTitle: {
     color: '#bfa14a',
     fontWeight: '600',
-    fontSize: 18,
-    marginBottom: 10,
+    fontSize: 16,
+    marginBottom: 8,
     textAlign: 'center',
   },
   desc: {
     color: '#e0e0e0',
-    fontSize: 15,
+    fontSize: 14,
     textAlign: 'center',
   },
   paragraphCard: {
