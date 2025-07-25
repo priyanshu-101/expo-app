@@ -255,11 +255,6 @@ const Home = () => {
         />
       </View>
 
-      {/* Footer */}
-      <View style={styles.footerContainer}>
-        <Text style={styles.footerText}>© 2025 DD Bullions All Rights Reserved.</Text>
-      </View>
-
       {/* Bottom Navigation */}
       <BottomNavigation activeRoute="home" />
     </View>
@@ -424,18 +419,6 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     paddingHorizontal: 15,
     alignItems: 'center',
-  },
-  footerText: {
-    color: '#000000',
-    fontSize: 11,
-    fontWeight: '600',
-    fontStyle: 'italic',
-  },
-  footerSubText: {
-    color: '#000000',
-    fontSize: 9,
-    marginTop: 2,
-    fontWeight: '500',
   },
 });
 
