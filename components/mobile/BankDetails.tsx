@@ -1,7 +1,7 @@
 import { FontAwesome, FontAwesome5 } from '@expo/vector-icons';
 import React from 'react';
 import { Linking, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import Footer from './Footer';
+import BottomNavigation from './BottomNavigation';
 import Navbar from './Navbar';
 
 const BANK_DETAILS = {
@@ -12,58 +12,100 @@ const BANK_DETAILS = {
   phone: '+91-9999398278',
 };
 
+const BANK_DETAILS_2 = {
+  accountName: 'HDFC BANK',
+  accountNumber: '99999899781543',
+  ifsc: 'HDFC0002008',
+  bank: 'HDFC Bank',
+  branch: 'KAROL BAGH',
+};
+
 const BankDetails = () => (
-  <ScrollView
-    style={{ backgroundColor: '#111' }}
-    contentContainerStyle={{ paddingTop: 30 }}
-  >
-    <Navbar />
-    <View style={styles.card}>
-      <Text style={styles.title}>Bank Details</Text>
-      <View style={styles.list}>
-        <View style={styles.item}>
-          <FontAwesome name="hashtag" style={styles.icon} />
-          <Text style={styles.label}>A/c No.:</Text>
-          <Text style={styles.value}>{BANK_DETAILS.accountNumber}</Text>
-        </View>
-        <View style={styles.item}>
-          <FontAwesome5 name="address-card" style={styles.icon} />
-          <Text style={styles.label}>IFSC:</Text>
-          <Text style={styles.value}>{BANK_DETAILS.ifsc}</Text>
-        </View>
-        <View style={styles.item}>
-          <FontAwesome name="university" style={styles.icon} />
-          <Text style={styles.label}>Bank:</Text>
-          <Text style={styles.value}>{BANK_DETAILS.bank}</Text>
-        </View>
-        <View style={styles.item}>
-          <FontAwesome5 name="code-branch" style={styles.icon} />
-          <Text style={styles.label}>Branch:</Text>
-          <Text style={styles.value}>{BANK_DETAILS.branch}</Text>
-        </View>
-        <View style={styles.item}>
-          <FontAwesome name="phone" style={styles.icon} />
-          <Text style={styles.label}>Phone:</Text>
-          <TouchableOpacity onPress={() => Linking.openURL(`tel:${BANK_DETAILS.phone.replace(/[^\d+]/g, '')}`)}>
-            <Text style={[styles.value, styles.link]}>{BANK_DETAILS.phone}</Text>
-          </TouchableOpacity>
+  <View style={styles.container}>
+    <ScrollView style={styles.scrollContainer} contentContainerStyle={styles.content}>
+      <Navbar />
+      <View style={styles.card}>
+        <Text style={styles.title}>Bank Details - YES BANK</Text>
+        <View style={styles.list}>
+          <View style={styles.item}>
+            <FontAwesome name="hashtag" style={styles.icon} />
+            <Text style={styles.label}>A/c No.:</Text>
+            <Text style={styles.value}>{BANK_DETAILS.accountNumber}</Text>
+          </View>
+          <View style={styles.item}>
+            <FontAwesome5 name="address-card" style={styles.icon} />
+            <Text style={styles.label}>IFSC:</Text>
+            <Text style={styles.value}>{BANK_DETAILS.ifsc}</Text>
+          </View>
+          <View style={styles.item}>
+            <FontAwesome name="university" style={styles.icon} />
+            <Text style={styles.label}>Bank:</Text>
+            <Text style={styles.value}>{BANK_DETAILS.bank}</Text>
+          </View>
+          <View style={styles.item}>
+            <FontAwesome5 name="code-branch" style={styles.icon} />
+            <Text style={styles.label}>Branch:</Text>
+            <Text style={styles.value}>{BANK_DETAILS.branch}</Text>
+          </View>
+          <View style={styles.item}>
+            <FontAwesome name="phone" style={styles.icon} />
+            <Text style={styles.label}>Phone:</Text>
+            <TouchableOpacity onPress={() => Linking.openURL(`tel:${BANK_DETAILS.phone.replace(/[^\d+]/g, '')}`)}>
+              <Text style={[styles.value, styles.link]}>{BANK_DETAILS.phone}</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
-    </View>
-    <Footer />
-  </ScrollView>
+
+      <View style={styles.card}>
+        <Text style={styles.title}>Bank Details - HDFC BANK</Text>
+        <View style={styles.list}>
+          <View style={styles.item}>
+            <FontAwesome name="hashtag" style={styles.icon} />
+            <Text style={styles.label}>A/c No.:</Text>
+            <Text style={styles.value}>{BANK_DETAILS_2.accountNumber}</Text>
+          </View>
+          <View style={styles.item}>
+            <FontAwesome5 name="address-card" style={styles.icon} />
+            <Text style={styles.label}>IFSC:</Text>
+            <Text style={styles.value}>{BANK_DETAILS_2.ifsc}</Text>
+          </View>
+          <View style={styles.item}>
+            <FontAwesome name="university" style={styles.icon} />
+            <Text style={styles.label}>Bank:</Text>
+            <Text style={styles.value}>{BANK_DETAILS_2.bank}</Text>
+          </View>
+          <View style={styles.item}>
+            <FontAwesome5 name="code-branch" style={styles.icon} />
+            <Text style={styles.label}>Branch:</Text>
+            <Text style={styles.value}>{BANK_DETAILS_2.branch}</Text>
+          </View>
+        </View>
+      </View>
+    </ScrollView>
+    <BottomNavigation activeRoute="bank-details" />
+  </View>
 );
 
 const styles = StyleSheet.create({
-  section: {
-    // flex: 1, // Remove this line
-    // backgroundColor: '#111', // Move to ScrollView style
-    // paddingTop: 30, // Move to contentContainerStyle
+  container: {
+    flex: 1,
+    backgroundColor: '#000000',
+  },
+  scrollContainer: {
+    flex: 1,
+    backgroundColor: '#111',
+  },
+  content: {
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    paddingVertical: 20,
+    gap: 20,
   },
   card: {
     backgroundColor: '#1e1e1e',
     borderRadius: 18,
-    padding: 24,
+    padding: 20,
     maxWidth: 400,
     width: '100%',
     margin: 0,
@@ -74,27 +116,27 @@ const styles = StyleSheet.create({
     elevation: 8,
   },
   title: {
-    fontSize: 24,
+    fontSize: 22,
     fontWeight: '700',
     color: '#bfa14a',
-    marginBottom: 24,
+    marginBottom: 20,
     textAlign: 'center',
     letterSpacing: 1,
   },
   list: {
     flexDirection: 'column',
-    gap: 16,
+    gap: 12,
   },
   item: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 8,
-    fontSize: 18,
+    fontSize: 16,
     backgroundColor: '#232323',
-    borderRadius: 12,
-    paddingVertical: 12,
-    paddingHorizontal: 16,
-    marginBottom: 8,
+    borderRadius: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 14,
+    marginBottom: 6,
     borderWidth: 1,
     borderColor: '#232323',
     shadowColor: '#bfa14a',
