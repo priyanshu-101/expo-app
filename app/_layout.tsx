@@ -5,7 +5,7 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, View } from 'react-native';
 import 'react-native-reanimated';
 
-import FloatingContact from '@/components/mobile/FloatingContact';
+// import FloatingContact from '@/components/mobile/FloatingContact';
 import { useColorScheme } from '@/hooks/useColorScheme';
 
 export default function RootLayout() {
@@ -28,7 +28,7 @@ export default function RootLayout() {
         </Stack>
         <StatusBar style="auto" />
       </ThemeProvider>
-      <FloatingContact />
+      {/* <FloatingContact /> */}
     </View>
   );
 }
