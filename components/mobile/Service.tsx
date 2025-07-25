@@ -1,24 +1,10 @@
 import { FontAwesome5 } from '@expo/vector-icons';
 import React from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
-import Navbar from './Navbar';
 import Footer from './Footer';
+import Navbar from './Navbar';
 
 const services = [
-  // {
-  //   icon: <FontAwesome5 name="exchange-alt" size={40} color="#bfa14a" />,
-  //   title: 'Gold Exchange (99.50%)',
-  //   description: (
-  //     <Text>
-  //       We do the job work of <Text style={{fontWeight: 'bold'}}>OLD GOLD</Text> to Refined <Text style={{fontWeight: 'bold'}}>PURE GOLD</Text> in <Text style={{fontWeight: 'bold'}}>AQUA REGIA</Text> process in highly International standard
-  //     </Text>
-  //   ),
-  // },
-  {
-    icon: <FontAwesome5 name="fire" size={40} color="#bfa14a" />,
-    title: 'Gold/Silver Melting',
-    description: 'Professional melting services for gold and silver with precision and care.'
-  },
   {
     icon: <FontAwesome5 name="shopping-cart" size={40} color="#bfa14a" />,
     title: 'We Buy/Sell Gold & Silver',
