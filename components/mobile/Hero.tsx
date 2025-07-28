@@ -186,17 +186,23 @@ const Home = () => {
     <View style={styles.productRow}>
       <View style={styles.productInfo}>
         <Text style={styles.productNameText}>
-          {item.product_name.toUpperCase().replace('GOLD ', '').replace('SILVER ', '')}
+          {item.product_name}
         </Text>
       </View>
       <View style={styles.priceContainer}>
         <Text style={[styles.priceText, priceHighlights[item.product_name+'_buy'] === 'green' && styles.priceUp, priceHighlights[item.product_name+'_buy'] === 'red' && styles.priceDown]}>
           {displayPrices[item.product_name]?.buy || 0}
         </Text>
+        <Text style={styles.marginText}>
+          +{productMargins[item.product_name]?.buy_margin || 0}
+        </Text>
       </View>
       <View style={styles.priceContainer}>
         <Text style={[styles.priceText, priceHighlights[item.product_name+'_sell'] === 'green' && styles.priceUp, priceHighlights[item.product_name+'_sell'] === 'red' && styles.priceDown]}>
           {displayPrices[item.product_name]?.sell || 0}
+        </Text>
+        <Text style={styles.marginText}>
+          +{productMargins[item.product_name]?.sell_margin || 0}
         </Text>
       </View>
     </View>
@@ -405,6 +411,17 @@ const styles = StyleSheet.create({
     color: '#ffffff',
     fontSize: 16,
     fontWeight: 'bold',
+  },
+  marginText: {
+    color: '#000000',
+    fontSize: 10,
+    marginTop: 1,
+    textAlign: 'center',
+    backgroundColor:'#bfa14a',
+    borderWidth: 1,
+    borderRadius: 8,
+    paddingHorizontal: 4,
+    paddingVertical: 2,
   },
   priceSubText: {
     color: '#888888',
