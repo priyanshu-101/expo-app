@@ -323,14 +323,14 @@ const styles = StyleSheet.create({
     borderColor: '#ffffff',
   },
   metricLabel: {
-    color: '#ffffff',
+    color: '#bfa14a',
     fontSize: 11,
     fontWeight: '700',
     marginBottom: 3,
     textAlign: 'center',
   },
   metricValue: {
-    color: '#00D4AA',
+    color: '#ffffff',
     fontSize: 18,
     fontWeight: 'bold',
     marginBottom: 2,
