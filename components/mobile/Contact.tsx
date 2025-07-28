@@ -5,10 +5,10 @@ import styled from "styled-components/native";
 import BottomNavigation from "./BottomNavigation";
 import Navbar from "./Navbar";
 
-const address = "4612/52 GROUND FLOOR, REGHAR PURA, KAROL BAGH-11005";
+const address = "4612/52 GROUND FLOOR, REGHAR PURA, KAROL BAGH-110005";
 const phone = " 9899781543 , 8376008198";
 const email = "d.d.bullions123@gmail.com";
-const reference = "DD Bullion Pvt. Ltd";
+const reference = "DD Bullions";
 
 const Contact = () => {
   const handleAddressClick = () => {
@@ -29,7 +29,7 @@ const Contact = () => {
       <Navbar />
       <ContentContainer>
         <Card>
-          <Title>DD Bullion Pvt. Ltd</Title>
+          <Title>DD Bullions</Title>
           
           <InfoGrid>
             <InfoItem>
