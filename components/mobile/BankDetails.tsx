@@ -9,7 +9,6 @@ const BANK_DETAILS = {
   ifsc: 'YESB0000205',
   bank: 'YES BANK',
   branch: 'KAROL BAGH NEW DELHI 110005',
-  phone: '+91-9999398278',
 };
 
 const BANK_DETAILS_2 = {
@@ -46,13 +45,6 @@ const BankDetails = () => (
             <FontAwesome5 name="code-branch" style={styles.icon} />
             <Text style={styles.label}>Branch:</Text>
             <Text style={styles.value}>{BANK_DETAILS.branch}</Text>
-          </View>
-          <View style={styles.item}>
-            <FontAwesome name="phone" style={styles.icon} />
-            <Text style={styles.label}>Phone:</Text>
-            <TouchableOpacity onPress={() => Linking.openURL(`tel:${BANK_DETAILS.phone.replace(/[^\d+]/g, '')}`)}>
-              <Text style={[styles.value, styles.link]}>{BANK_DETAILS.phone}</Text>
-            </TouchableOpacity>
           </View>
         </View>
       </View>
