@@ -33,6 +33,7 @@ const Home = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [priceHighlights, setPriceHighlights] = useState<{ [key: string]: string }>({});
+  const [metricHighlights, setMetricHighlights] = useState<{ [key: string]: string }>({});
   const [mantrRates, setMantrRates] = useState<Rates | null>(null);
   const [productMargins, setProductMargins] = useState<{ [key: string]: ProductMargin }>({});
   const [displayPrices, setDisplayPrices] = useState<{ [key: string]: { buy: number; sell: number } }>({});
@@ -87,6 +88,8 @@ const Home = () => {
     if (products.length === 0) return;
     
     const newPrices: { [key: string]: { buy: number; sell: number } } = {};
+    const newHighlights: { [key: string]: string } = {};
+    
     products.forEach((product: Product) => {
       const buyMargin = productMargins[product.product_name] && typeof productMargins[product.product_name]['buy_margin'] === 'number' ? productMargins[product.product_name]['buy_margin'] : 0;
       const sellMargin = productMargins[product.product_name] && typeof productMargins[product.product_name]['sell_margin'] === 'number' ? productMargins[product.product_name]['sell_margin'] : 0;
@@ -107,18 +110,105 @@ const Home = () => {
         }
       }
       
+      const newBuyPrice = buyCosting + buyMargin;
+      const newSellPrice = sellCosting + sellMargin;
+      
       newPrices[product.product_name] = {
-        buy: buyCosting + buyMargin,
-        sell: sellCosting + sellMargin,
+        buy: newBuyPrice,
+        sell: newSellPrice,
       };
+      
+      // Compare with previous prices to set highlights
+      if (displayPrices[product.product_name]) {
+        const prevBuy = displayPrices[product.product_name].buy;
+        const prevSell = displayPrices[product.product_name].sell;
+        
+        if (newBuyPrice > prevBuy) {
+          newHighlights[product.product_name + '_buy'] = 'green';
+        } else if (newBuyPrice < prevBuy) {
+          newHighlights[product.product_name + '_buy'] = 'red';
+        }
+        
+        if (newSellPrice > prevSell) {
+          newHighlights[product.product_name + '_sell'] = 'green';
+        } else if (newSellPrice < prevSell) {
+          newHighlights[product.product_name + '_sell'] = 'red';
+        }
+      }
     });
     
     setDisplayPrices(newPrices);
-  }, [productMargins, mantrRates, products]);
+    if (Object.keys(newHighlights).length > 0) {
+      setPriceHighlights(newHighlights);
+      setTimeout(() => {
+        setPriceHighlights({});
+      }, 3000);
+    }
+  }, [productMargins, mantrRates, products, displayPrices]);
 
   useEffect(() => {
     setLoading(false);
   }, []);
+
+  useEffect(() => {
+    if (!mantrRates) return;
+    const newMetricHighlights: { [key: string]: string } = {};
+    const baseInr = mantrRates?.inr?.buy ?? mantrRates?.inr?.sell ?? 86.448;
+    let currentMetrics;
+    
+    if (activeTab === 'gold') {
+      const goldSpot = mantrRates?.gold?.spot?.buy ?? mantrRates?.gold?.spot?.sell ?? 3389.68;
+      const goldCosting = mantrRates?.gold?.costing?.buy ?? mantrRates?.gold?.costing?.sell ?? 99420;
+      
+      currentMetrics = {
+        spot: goldSpot,
+        inr: baseInr,
+        costing: goldCosting
+      };
+    } else {
+      const silverSpot = mantrRates?.silver?.spot?.buy ?? mantrRates?.silver?.spot?.sell ?? 98880;
+      const silverCosting = mantrRates?.silver?.costing?.buy ?? mantrRates?.silver?.costing?.sell ?? 99780;
+      
+      currentMetrics = {
+        spot: silverSpot,
+        inr: baseInr,
+        costing: silverCosting
+      };
+    }
+    
+    const prevMetricsKey = `prevMetrics_${activeTab}`;
+    const prevMetrics = (globalThis as any)[prevMetricsKey];
+    
+    if (prevMetrics) {
+      if (currentMetrics.spot > prevMetrics.spot) {
+        newMetricHighlights['spot'] = 'green';
+      } else if (currentMetrics.spot < prevMetrics.spot) {
+        newMetricHighlights['spot'] = 'red';
+      }
+      
+      if (currentMetrics.inr > prevMetrics.inr) {
+        newMetricHighlights['inr'] = 'green';
+      } else if (currentMetrics.inr < prevMetrics.inr) {
+        newMetricHighlights['inr'] = 'red';
+      }
+      
+      if (currentMetrics.costing > prevMetrics.costing) {
+        newMetricHighlights['costing'] = 'green';
+      } else if (currentMetrics.costing < prevMetrics.costing) {
+        newMetricHighlights['costing'] = 'red';
+      }
+    }
+    
+    (globalThis as any)[prevMetricsKey] = currentMetrics;
+    
+    if (Object.keys(newMetricHighlights).length > 0) {
+      setMetricHighlights(newMetricHighlights);
+      
+      setTimeout(() => {
+        setMetricHighlights({});
+      }, 3000);
+    }
+  }, [mantrRates, activeTab]);
 
   if (loading) return <View style={styles.heroLoading}><ActivityIndicator size="large" color="#FFB000" /><Text style={{color: '#ffffff', marginTop: 10}}>Loading...</Text></View>;
   if (error) return <View style={styles.heroLoading}><Text style={{color: '#ffffff'}}>Error: {error}</Text></View>;
@@ -222,19 +312,19 @@ const Home = () => {
 
       {/* Metrics Cards */}
       <View style={styles.metricsContainer}>
-        <View style={styles.metricCard}>
+        <View style={[styles.metricCard, metricHighlights['spot'] === 'green' && styles.metricCardUp, metricHighlights['spot'] === 'red' && styles.metricCardDown]}>
           <Text style={styles.metricLabel}>{activeTab === 'gold' ? 'GOLD SPOT' : 'SILVER SPOT'}</Text>
           <Text style={styles.metricValue}>{metrics.spot.toLocaleString()}</Text>
           <Text style={styles.metricRange}>{metrics.spotHigh} | {metrics.spotLow}</Text>
         </View>
         
-        <View style={styles.metricCard}>
+        <View style={[styles.metricCard, metricHighlights['inr'] === 'green' && styles.metricCardUp, metricHighlights['inr'] === 'red' && styles.metricCardDown]}>
           <Text style={styles.metricLabel}>INR</Text>
           <Text style={styles.metricValue}>{metrics.inr}</Text>
           <Text style={styles.metricRange}>{metrics.inrHigh } | {metrics.inrLow}</Text>
         </View>
         
-        <View style={styles.metricCard}>
+        <View style={[styles.metricCard, metricHighlights['costing'] === 'green' && styles.metricCardUp, metricHighlights['costing'] === 'red' && styles.metricCardDown]}>
           <Text style={styles.metricLabel}>{activeTab === 'gold' ? 'GOLD COSTING' : 'SILVER COSTING'}</Text>
           <Text style={styles.metricValue}>{metrics.costing.toLocaleString()}</Text>
           <Text style={styles.metricRange}>{metrics.costingHigh} | {metrics.costingLow}</Text>
@@ -321,6 +411,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderWidth: 1,
     borderColor: '#ffffff',
+  },
+  metricCardUp: {
+    backgroundColor: '#00ff00', 
+    borderColor: '#00ff00',
+  },
+  metricCardDown: {
+    backgroundColor: '#ff0000', 
+    borderColor: '#ff0000',
   },
   metricLabel: {
     color: '#bfa14a',
