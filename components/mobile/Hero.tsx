@@ -15,9 +15,15 @@ interface ProductMargin {
   metal: 'gold' | 'silver';
 }
 interface Rates {
-  inr?: { buy?: number; sell?: number };
-  gold?: { spot?: { buy?: number; sell?: number }, costing?: { buy?: number; sell?: number } };
-  silver?: { spot?: { buy?: number; sell?: number }, costing?: { buy?: number; sell?: number } };
+  inr?: { buy?: number; sell?: number; high?: number; low?: number };
+  gold?: { 
+    spot?: { buy?: number; sell?: number; high?: number; low?: number };
+    costing?: { buy?: number; sell?: number; high?: number; low?: number };
+  };
+  silver?: { 
+    spot?: { buy?: number; sell?: number; high?: number; low?: number };
+    costing?: { buy?: number; sell?: number; high?: number; low?: number };
+  };
 }
 
 const Home = () => {
@@ -139,14 +145,14 @@ const Home = () => {
       
       return {
         spot: goldSpot,
-        spotLow: mantrRates?.gold?.spot?.sell ?? goldSpot,
-        spotHigh: mantrRates?.gold?.spot?.buy ?? goldSpot,
+        spotLow: mantrRates?.gold?.spot?.low ?? goldSpot,
+        spotHigh: mantrRates?.gold?.spot?.high ?? goldSpot,
         inr: baseInr,
-        inrLow: mantrRates?.inr?.sell ?? baseInr,
-        inrHigh: mantrRates?.inr?.buy ?? baseInr,
+        inrLow: mantrRates?.inr?.low ?? baseInr,
+        inrHigh: mantrRates?.inr?.high ?? baseInr,
         costing: goldCosting,
-        costingLow: mantrRates?.gold?.costing?.sell ?? goldCosting,
-        costingHigh: mantrRates?.gold?.costing?.buy ?? goldCosting
+        costingLow: mantrRates?.gold?.costing?.low ?? goldCosting,
+        costingHigh: mantrRates?.gold?.costing?.high ?? goldCosting
       };
     } else {
       const silverSpot = mantrRates?.silver?.spot?.buy ?? mantrRates?.silver?.spot?.sell ?? 98880;
@@ -154,14 +160,14 @@ const Home = () => {
       
       return {
         spot: silverSpot,
-        spotLow: mantrRates?.silver?.spot?.sell ?? silverSpot,
-        spotHigh: mantrRates?.silver?.spot?.buy ?? silverSpot,
+        spotLow: mantrRates?.silver?.spot?.low ?? silverSpot,
+        spotHigh: mantrRates?.silver?.spot?.high ?? silverSpot,
         inr: baseInr,
-        inrLow: mantrRates?.inr?.sell ?? baseInr,
-        inrHigh: mantrRates?.inr?.buy ?? baseInr,
+        inrLow: mantrRates?.inr?.low ?? baseInr,
+        inrHigh: mantrRates?.inr?.high ?? baseInr,
         costing: silverCosting,
-        costingLow: mantrRates?.silver?.costing?.sell ?? silverCosting,
-        costingHigh: mantrRates?.silver?.costing?.buy ?? silverCosting
+        costingLow: mantrRates?.silver?.costing?.low ?? silverCosting,
+        costingHigh: mantrRates?.silver?.costing?.high ?? silverCosting
       };
     }
   };
@@ -182,19 +188,16 @@ const Home = () => {
         <Text style={styles.productNameText}>
           {item.product_name.toUpperCase().replace('GOLD ', '').replace('SILVER ', '')}
         </Text>
-        <Text style={styles.productWeight}>1KG (24th July)</Text>
       </View>
       <View style={styles.priceContainer}>
         <Text style={[styles.priceText, priceHighlights[item.product_name+'_buy'] === 'green' && styles.priceUp, priceHighlights[item.product_name+'_buy'] === 'red' && styles.priceDown]}>
           {displayPrices[item.product_name]?.buy || 0}
         </Text>
-        <Text style={styles.priceSubText}>L : {(displayPrices[item.product_name]?.buy || 0) - 200}</Text>
       </View>
       <View style={styles.priceContainer}>
         <Text style={[styles.priceText, priceHighlights[item.product_name+'_sell'] === 'green' && styles.priceUp, priceHighlights[item.product_name+'_sell'] === 'red' && styles.priceDown]}>
           {displayPrices[item.product_name]?.sell || 0}
         </Text>
-        <Text style={styles.priceSubText}>H : {(displayPrices[item.product_name]?.sell || 0) + 200}</Text>
       </View>
     </View>
   );
@@ -216,19 +219,19 @@ const Home = () => {
         <View style={styles.metricCard}>
           <Text style={styles.metricLabel}>{activeTab === 'gold' ? 'GOLD SPOT' : 'SILVER SPOT'}</Text>
           <Text style={styles.metricValue}>{metrics.spot.toLocaleString()}</Text>
-          {/* <Text style={styles.metricRange}>{metrics.spotLow} | {metrics.spotHigh}</Text> */}
+          <Text style={styles.metricRange}>{metrics.spotHigh} | {metrics.spotLow}</Text>
         </View>
         
         <View style={styles.metricCard}>
           <Text style={styles.metricLabel}>INR</Text>
-          <Text style={styles.metricValue}>{metrics.inr && typeof metrics.inr === 'number' ? metrics.inr.toString() : '86.448'}</Text>
-          {/* <Text style={styles.metricRange}>{metrics.inrLow && typeof metrics.inrLow === 'number' ? metrics.inrLow.toString() : '86.345'} | {metrics.inrHigh && typeof metrics.inrHigh === 'number' ? metrics.inrHigh.toString() : '86.478'}</Text> */}
+          <Text style={styles.metricValue}>{metrics.inr}</Text>
+          <Text style={styles.metricRange}>{metrics.inrHigh } | {metrics.inrLow}</Text>
         </View>
         
         <View style={styles.metricCard}>
           <Text style={styles.metricLabel}>{activeTab === 'gold' ? 'GOLD COSTING' : 'SILVER COSTING'}</Text>
           <Text style={styles.metricValue}>{metrics.costing.toLocaleString()}</Text>
-          {/* <Text style={styles.metricRange}>{metrics.costingLow} | {metrics.costingHigh}</Text> */}
+          <Text style={styles.metricRange}>{metrics.costingHigh} | {metrics.costingLow}</Text>
         </View>
       </View>
 
