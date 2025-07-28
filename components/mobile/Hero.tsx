@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { ActivityIndicator, FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import BottomNavigation from './BottomNavigation';
 import Navbar from './Navbar';
@@ -37,6 +37,7 @@ const Home = () => {
   const [mantrRates, setMantrRates] = useState<Rates | null>(null);
   const [productMargins, setProductMargins] = useState<{ [key: string]: ProductMargin }>({});
   const [displayPrices, setDisplayPrices] = useState<{ [key: string]: { buy: number; sell: number } }>({});
+  const previousPricesRef = useRef<{ [key: string]: { buy: number; sell: number } }>({});
   const [activeTab, setActiveTab] = useState<'gold' | 'silver' | 'unfix'>('gold');
 
   useEffect(() => {
@@ -119,9 +120,9 @@ const Home = () => {
       };
       
       // Compare with previous prices to set highlights
-      if (displayPrices[product.product_name]) {
-        const prevBuy = displayPrices[product.product_name].buy;
-        const prevSell = displayPrices[product.product_name].sell;
+      if (previousPricesRef.current[product.product_name]) {
+        const prevBuy = previousPricesRef.current[product.product_name].buy;
+        const prevSell = previousPricesRef.current[product.product_name].sell;
         
         if (newBuyPrice > prevBuy) {
           newHighlights[product.product_name + '_buy'] = 'green';
@@ -137,14 +138,20 @@ const Home = () => {
       }
     });
     
+    // Update previous prices ref before setting new ones
+    previousPricesRef.current = displayPrices;
     setDisplayPrices(newPrices);
+    
+    // Only set highlights if there are changes
     if (Object.keys(newHighlights).length > 0) {
       setPriceHighlights(newHighlights);
+      
+      // Clear highlights after 3 seconds
       setTimeout(() => {
         setPriceHighlights({});
       }, 3000);
     }
-  }, [productMargins, mantrRates, products, displayPrices]);
+  }, [productMargins, mantrRates, products]);
 
   useEffect(() => {
     setLoading(false);
@@ -421,7 +428,7 @@ const styles = StyleSheet.create({
     borderColor: '#ff0000',
   },
   metricLabel: {
-    color: '#bfa14a',
+    color: '#ffffff',
     fontSize: 11,
     fontWeight: '700',
     marginBottom: 3,
